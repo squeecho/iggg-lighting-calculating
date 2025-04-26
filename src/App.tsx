@@ -160,7 +160,7 @@ function App() {
       <div className="w-full max-w-md mx-auto space-y-14">
         {/* 로고 */}
         <div className="flex flex-col items-center">
-          <img src="/logo.png" alt="로고" className="w-32 h-32 mb-3 object-contain"/>
+          <img src="/logo.png" alt="로고" className="w-32 h-auto mb-3 object-contain"/>
           <h1 className="text-2xl font-bold">간이 조도 계산기</h1>
         </div>
 
