@@ -124,7 +124,8 @@ function App() {
     setSelectedLightColorTemps(p=>{const n={...p}; delete n[light.name]; return n})
   },[])
 
-  const addCustomLight = useCallback(()=>{
+  const addCustomLight = useCallback((e: React.MouseEvent)=>{
+    e.preventDefault()
     if(!customLightName||customLightLumen<=0||customLightWatt<=0) return
     setSelectedLights(p=>[...p,{id:Date.now().toString(),name:customLightName,lumen:customLightLumen,
                                watt:customLightWatt,colorTemp:'커스텀',size:'커스텀',quantity:1}])
@@ -148,14 +149,21 @@ function App() {
     return'4.1m 이상'
   }
 
-  const setCT = (name:string,ct:string)=>{
+  const setCT = (name:string,ct:string, e: React.MouseEvent)=>{
+    e.preventDefault()
     setSelectedLightColorTemps(p=>({...p,[name]:ct}))
     setTempQuantities(p=>({...p,[name]:1}))
   }
 
+  // 페이지 이동 방지
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    return false
+  }
+
   /* ──────────────────────────── 렌더 ──────────────────────────── */
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800 leading-snug px-4 py-16">
+    <div onClick={(e) => e.preventDefault()} className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800 leading-snug px-4 py-16">
       <div className="w-full max-w-md mx-auto space-y-14">
         {/* 로고 */}
         <div className="flex flex-col items-center">
@@ -173,7 +181,7 @@ function App() {
             { label:'높이',   val:height, set:onHeight, unit:'mm'}
           ].map(field=>(
             <div key={field.label} className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">{field.label}</span>
+              <span className="absolute left-3 top-0 h-full flex items-center text-gray-500">{field.label}</span>
 
               <input
                 type="text" inputMode="numeric"
@@ -181,17 +189,29 @@ function App() {
                 onChange={e=>field.set(e.target.value)}
                 className="w-full pl-14 pr-14 py-2.5 border rounded-lg text-center"/>
 
-              {/* ± 버튼 */}
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col">
+              {/* - 버튼 */}
+              <div className="absolute left-14 top-0 h-full flex items-center">
                 <button
-                  {...useLongPress(()=>field.set(String(Math.max(0, Number(field.val||0)+1))))}
-                  type="button" className="w-6 h-4 leading-none border rounded-t">＋</button>
-                <button
-                  {...useLongPress(()=>field.set(String(Math.max(0, Number(field.val||0)-1))))}
-                  type="button" className="w-6 h-4 leading-none border rounded-b">−</button>
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    field.set(String(Math.max(0, Number(field.val||0)-1)));
+                  }}
+                  className="h-[40px] px-2 flex items-center justify-center border rounded">−</button>
               </div>
 
-              <span className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-500">{field.unit}</span>
+              {/* + 버튼 */}
+              <div className="absolute right-14 top-0 h-full flex items-center">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    field.set(String(Math.max(0, Number(field.val||0)+1)));
+                  }}
+                  className="h-[40px] px-2 flex items-center justify-center border rounded">＋</button>
+              </div>
+
+              <span className="absolute right-3 top-0 h-full flex items-center text-gray-500">{field.unit}</span>
             </div>
           ))}
 
@@ -214,7 +234,11 @@ function App() {
                 const t=spaceTypes.find(s=>s.name===n)!
                 return (
                   <button key={n} type="button"
-                    onClick={()=>{setSpaceType(t);setDesiredLux(t.lux)}}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSpaceType(t);
+                      setDesiredLux(t.lux);
+                    }}
                     className={`px-1.5 py-1 rounded-lg text-xs transition
                               ${spaceType.name===n
                                 ?'bg-blue-600 text-white ring-2 ring-blue-300'
@@ -229,7 +253,11 @@ function App() {
                 const t=spaceTypes.find(s=>s.name===n)!
                 return (
                   <button key={n} type="button"
-                    onClick={()=>{setSpaceType(t);setDesiredLux(t.lux)}}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSpaceType(t);
+                      setDesiredLux(t.lux);
+                    }}
                     className={`px-1.5 py-1 rounded-lg text-xs transition
                               ${spaceType.name===n
                                 ?'bg-blue-600 text-white ring-2 ring-blue-300'
@@ -253,7 +281,13 @@ function App() {
           <div className="flex flex-wrap gap-3 justify-center">
             {lightCategories.map(cat=>(
               <button key={cat} type="button"
-                      onClick={()=>{setSelectedCategory(cat);setSelectedLightColorTemps({})}}
+                      onClick={(e)=>{
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSelectedCategory(cat);
+                        setSelectedLightColorTemps({});
+                        return false;
+                      }}
                       className={`px-3 py-1.5 rounded-lg text-sm transition
                                 ${selectedCategory===cat
                                   ?'bg-blue-600 text-white ring-2 ring-blue-300'
@@ -274,7 +308,7 @@ function App() {
                     const sel = selectedLightColorTemps[light.name]===ct
                     return (
                       <button key={ct} type="button"
-                        {...useLongPress(()=>setCT(light.name,ct))}
+                        onClick={(e) => setCT(light.name, ct, e)}
                         className={`w-20 px-2 py-1 rounded-lg text-xs leading-snug transition
                                   ${sel
                                     ?'bg-blue-600 text-white ring-2 ring-blue-300'
@@ -288,12 +322,15 @@ function App() {
                 {selectedLightColorTemps[light.name] && (
                   <div className="flex flex-col items-center gap-2 pt-4 border-t">
                     <div className="flex items-center">
-                      <button
-                        {...useLongPress(()=>setTempQuantities(p=>{
-                          const cur=p[light.name]||1
-                          return {...p,[light.name]:Math.max(1,+cur-1)}
-                        }))}
-                        type="button" className="w-9 h-9 border rounded-l">−</button>
+                      <button type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setTempQuantities(p=>{
+                            const cur=p[light.name]||1
+                            return {...p,[light.name]:Math.max(1,+cur-1)}
+                          });
+                        }}
+                        className="w-9 h-9 border rounded-l">−</button>
 
                       <input value={tempQuantities[light.name]||1}
                              inputMode="numeric"
@@ -303,18 +340,22 @@ function App() {
                              }}
                              className="w-12 h-9 border-y text-center"/>
 
-                      <button
-                        {...useLongPress(()=>setTempQuantities(p=>{
-                          const cur=p[light.name]||1
-                          return {...p,[light.name]:+cur+1}
-                        }))}
-                        type="button" className="w-9 h-9 border rounded-r">＋</button>
+                      <button type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setTempQuantities(p=>{
+                            const cur=p[light.name]||1
+                            return {...p,[light.name]:+cur+1}
+                          });
+                        }}
+                        className="w-9 h-9 border rounded-r">＋</button>
                     </div>
 
                     <button type="button"
-                      onClick={()=>{
-                        addLight(light,selectedLightColorTemps[light.name],Number(tempQuantities[light.name]||1))
-                        setTempQuantities({...tempQuantities,[light.name]:1})
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addLight(light,selectedLightColorTemps[light.name],Number(tempQuantities[light.name]||1));
+                        setTempQuantities({...tempQuantities,[light.name]:1});
                       }}
                       className="px-4 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
                       추가
@@ -342,7 +383,8 @@ function App() {
                    className="border px-3 py-2 rounded"/>
           </div>
 
-          <button type="button" onClick={addCustomLight}
+          <button type="button" 
+                  onClick={addCustomLight}
                   disabled={!customLightName||customLightLumen<=0||customLightWatt<=0}
                   className="w-full py-2 rounded-lg bg-purple-600 text-white disabled:bg-gray-400">
             커스텀 조명 추가
@@ -360,12 +402,13 @@ function App() {
               목표 {desiredLux.toLocaleString()} lx
             </p>
 
-            {desiredLux>0 && (()=>{const r=Math.min(expectedLux/desiredLux,1)
-              const p=Math.round(r*100)
+            {desiredLux>0 && (()=>{
+              const r = expectedLux/desiredLux
+              const p = Math.round(r*100)
               return(
                 <>
                   <div className="mt-4 w-full bg-gray-200 h-3 rounded overflow-hidden">
-                    <div style={{width:`${p}%`}}
+                    <div style={{width: r >= 1 ? '100%' : `${p}%`}}
                          className={`${r>=1?'bg-green-500':'bg-yellow-400'} h-3 rounded`}/>
                   </div>
                   <p className="mt-2 text-sm text-gray-600">달성률 {p}%</p>
@@ -386,22 +429,28 @@ function App() {
           {selectedLights.length===0
             ? <p className="text-center text-gray-500">없음</p>
             : <>
-                <div className="max-h-80 overflow-y-auto">
+                <div className="max-h-80 overflow-y-auto overflow-x-hidden">
                   {selectedLights.map(l=>(
                     <div key={l.id}
-                         className="grid grid-cols-[1fr_auto_auto] items-center gap-4 border-b py-3">
-                      <div>
-                        <p className="font-medium truncate">{l.name}</p>
-                        <p className="text-xs text-gray-500">
-                          {l.colorTemp}&nbsp;|&nbsp;{l.watt}&nbsp;W
+                         className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 sm:gap-4 border-b py-3">
+                      <div className="min-w-0 pr-1">
+                        <p className="font-medium truncate max-w-[120px] sm:max-w-full">{l.name}</p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {l.colorTemp === '커스텀' 
+                            ? `${l.lumen} lm | ${l.watt} W`
+                            : `${l.colorTemp} | ${l.watt} W`
+                          }
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-center gap-px w-32">
+                      <div className="flex items-center justify-center gap-px w-[90px] sm:w-32">
                         {/* − */}
                         <button type="button"
-                          {...useLongPress(()=>updateQty(l.id,Math.max(1,l.quantity-1)))}
-                          className="w-9 h-9 border rounded-l">−</button>
+                          onClick={(e) => {
+                            e.preventDefault();
+                            updateQty(l.id,Math.max(1,l.quantity-1));
+                          }}
+                          className="w-7 h-9 sm:w-9 border rounded-l">−</button>
 
                         <input value={l.quantity}
                                inputMode="numeric"
@@ -409,16 +458,23 @@ function App() {
                                  const v=e.target.value.replace(/[^0-9]/g,'')
                                  if(v) updateQty(l.id,+v)
                                }}
-                               className="w-12 h-9 border-y text-center"/>
+                               className="w-10 h-9 sm:w-12 border-y text-center"/>
 
                         {/* ＋ */}
                         <button type="button"
-                          {...useLongPress(()=>updateQty(l.id,l.quantity+1))}
-                          className="w-9 h-9 border rounded-r">＋</button>
+                          onClick={(e) => {
+                            e.preventDefault();
+                            updateQty(l.id,l.quantity+1);
+                          }}
+                          className="w-7 h-9 sm:w-9 border rounded-r">＋</button>
                       </div>
 
-                      <button type="button" onClick={()=>removeLight(l.id)}
-                              className="px-3 py-1 rounded text-red-600 border border-red-200 hover:bg-red-50">
+                      <button type="button" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          removeLight(l.id);
+                        }}
+                        className="px-2 sm:px-3 py-1 rounded text-red-600 border border-red-200 hover:bg-red-50 whitespace-nowrap">
                         삭제
                       </button>
                     </div>
