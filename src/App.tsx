@@ -167,6 +167,8 @@ function App() {
         {/* ▣ 공간 정보 입력 ▣ */}
         <section className="bg-white p-6 rounded-xl shadow border space-y-5">
           <h2 className="text-xl font-semibold text-center">공간 정보 입력</h2>
+          
+          <p className="text-center text-[0.65rem] text-gray-500 -mt-1 mb-1">(바닥면적, 조명높이)</p>
 
           {/* 면적 & 높이 */}
           {[
@@ -211,8 +213,16 @@ function App() {
           <p className="text-center text-xs text-gray-500">현재 적용 UF: {UF.toFixed(2)} (높이: {ufText(UF)})</p>
 
           {/* 희망 조도 */}
-          <select value={desiredLux} onChange={e=>setDesiredLux(+e.target.value)}
-                  className="w-full py-2.5 border rounded-lg text-center">
+          <select 
+            value={desiredLux} 
+            onChange={e=>{
+              const value = +e.target.value;
+              setDesiredLux(value);
+              // 포커스 해제하여 선택 UI가 즉시 닫히도록 함
+              e.target.blur();
+            }}
+            className="w-full py-2.5 border rounded-lg text-center"
+          >
             {Array.from({length:(1000-50)/50+1},(_,i)=>50+i*50).map(v=>(
               <option key={v} value={v}>{v} lx</option>
             ))}
@@ -325,13 +335,19 @@ function App() {
                         }}
                         className="w-9 h-9 border rounded-l">−</button>
 
-                      <input value={tempQuantities[light.name]||1}
-                             inputMode="numeric"
-                             onChange={e=>{
-                               const v=e.target.value.replace(/[^0-9]/g,'')
-                               if(v) setTempQuantities({...tempQuantities,[light.name]:+v})
-                             }}
-                             className="w-12 h-9 border-y text-center"/>
+                      <input 
+                        value={tempQuantities[light.name]||1}
+                        inputMode="numeric"
+                        onChange={e=>{
+                          const v=e.target.value.replace(/[^0-9]/g,'')
+                          if(v) setTempQuantities({...tempQuantities,[light.name]:+v})
+                          else setTempQuantities({...tempQuantities,[light.name]:1})
+                        }}
+                        onFocus={e => {
+                          // 필드 선택 시 내용을 모두 선택 상태로 만들어 쉽게 덮어쓸 수 있게 합니다
+                          e.target.select();
+                        }}
+                        className="w-12 h-9 border-y text-center"/>
 
                       <button type="button"
                         onClick={(e) => {
@@ -445,13 +461,20 @@ function App() {
                           }}
                           className="w-7 h-9 sm:w-9 border rounded-l">−</button>
 
-                        <input value={l.quantity}
-                               inputMode="numeric"
-                               onChange={e=>{
-                                 const v=e.target.value.replace(/[^0-9]/g,'')
-                                 if(v) updateQty(l.id,+v)
-                               }}
-                               className="w-10 h-9 sm:w-12 border-y text-center"/>
+                        <input 
+                          value={l.quantity}
+                          inputMode="numeric"
+                          onChange={e=>{
+                            const v=e.target.value.replace(/[^0-9]/g,'')
+                            if(v) updateQty(l.id,+v)
+                            // 숫자가 없는 경우 기본값 1로 설정
+                            else updateQty(l.id,1)
+                          }}
+                          onFocus={e => {
+                            // 필드 선택 시 내용을 모두 선택 상태로 만들어 쉽게 덮어쓸 수 있게 합니다
+                            e.target.select();
+                          }}
+                          className="w-10 h-9 sm:w-12 border-y text-center"/>
 
                         {/* ＋ */}
                         <button type="button"
