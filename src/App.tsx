@@ -146,11 +146,11 @@ function App() {
 
   /* ──────────────────────────── 렌더 ──────────────────────────── */
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800 text-base leading-snug px-4 sm:px-6 md:px-8 lg:px-12 py-16">
+    <div className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800 leading-snug px-4 sm:px-6 md:px-8 lg:px-12 py-16">
       <div className="max-w-2xl w-full mx-auto space-y-16">
         {/* 로고 */}
         <div className="flex flex-col items-center">
-          <img src="/logo.png" alt="로고" className="w-[120px] h-auto mb-4 object-contain"/>
+          <img src="/logo.png" alt="로고" className="w-24 h-auto mb-4 object-contain"/>
           <h1 className="text-3xl font-bold">간이 조도 계산기</h1>
         </div>
 
@@ -195,33 +195,33 @@ function App() {
               <p className="text-center font-medium">공간 유형</p>
 
               {/* 1행 */}
-              <div className="flex flex-wrap gap-2 justify-center">
+              <div className="grid grid-cols-4 gap-2">
                 {firstRow.map(n=>{
                   const t=spaceTypes.find(s=>s.name===n)!
                   return(
                     <button key={n}
                             onClick={()=>{setSpaceType(t);setDesiredLux(t.lux)}}
-                            className={`px-3 py-1 rounded-lg transition
+                            className={`px-1.5 py-1 rounded-lg text-sm transition
                                         ${spaceType.name===n
                                           ?'bg-blue-600 text-white ring-2 ring-blue-300'
                                           :'bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-100'}`}>
-                      {n} ({t.lux})
+                      {n}<br/>( {t.lux} )
                     </button>)
                 })}
               </div>
 
               {/* 2행 */}
-              <div className="flex flex-wrap gap-2 justify-center">
+              <div className="grid grid-cols-3 gap-2 mt-1">
                 {secondRow.map(n=>{
                   const t=spaceTypes.find(s=>s.name===n)!
                   return(
                     <button key={n}
                             onClick={()=>{setSpaceType(t);setDesiredLux(t.lux)}}
-                            className={`px-3 py-1 rounded-lg transition
+                            className={`px-1.5 py-1 rounded-lg text-sm transition
                                         ${spaceType.name===n
                                           ?'bg-blue-600 text-white ring-2 ring-blue-300'
                                           :'bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-100'}`}>
-                      {n} ({t.lux})
+                      {n}<br/>( {t.lux} )
                     </button>)
                 })}
               </div>
@@ -252,7 +252,7 @@ function App() {
             ))}
           </div>
 
-          {/* ▼▼▼ 변경 ①·② : 내부 스크롤 제거 & 간격 살짝 확대 ▼▼▼ */}
+          {/* 조명 카드 */}
           <div className="space-y-8 px-1">
             {filteredLights.map(light=>(
               <div key={light.name} className="border rounded-xl p-5 space-y-4">
@@ -265,15 +265,19 @@ function App() {
                 <div>
                   <p className="mb-2 text-sm text-center font-medium">색온도 선택</p>
                   <div className="flex flex-wrap gap-3 justify-center">
-                    {light.colorTemps.map(ct=>(
-                      <button key={ct} onClick={()=>setCT(light.name,ct)}
-                              className={`px-3 py-1 rounded-lg transition
-                                          ${selectedLightColorTemps[light.name]===ct
-                                            ?'bg-blue-600 text-white ring-2 ring-blue-300'
-                                            :'bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50'}`}>
-                        {ct} ({light.lumenByColorTemp[ct]} lm)
-                      </button>
-                    ))}
+                    {light.colorTemps.map(ct=>{
+                      const sel = selectedLightColorTemps[light.name]===ct
+                      return(
+                        <button key={ct}
+                                onClick={()=>setCT(light.name,ct)}
+                                className={`min-w-[78px] px-2 py-1 rounded-lg text-sm leading-tight transition
+                                            ${sel
+                                              ?'bg-blue-600 text-white ring-2 ring-blue-300'
+                                              :'bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50'}`}>
+                          <span className="block">{ct}</span>
+                          <span className="block text-[0.65rem]">{light.lumenByColorTemp[ct]} lm</span>
+                        </button>)
+                    })}
                   </div>
                 </div>
 
@@ -333,46 +337,35 @@ function App() {
                   className="w-full py-2 rounded-lg bg-purple-600 text-white disabled:bg-gray-400">커스텀 조명 추가</button>
         </section>
 
-       {/* ▣ 조도 결과 ▣ */}
-<section className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 space-y-6">
-  <h2 className="text-2xl font-semibold text-center border-b pb-4">조도 결과</h2>
+        {/* ▣ 조도 결과 ▣ */}
+        <section className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 space-y-6">
+          <h2 className="text-2xl font-semibold text-center border-b pb-4">조도 결과</h2>
 
-  {/* 현재/목표 표시 */}
-  <div className={`p-4 rounded-lg text-center border
-                   ${expectedLux >= desiredLux ? 'bg-green-50' : 'bg-yellow-50'}`}>
-    <p className="text-4xl font-bold">{expectedLux.toLocaleString()} lx</p>
-    <p className="mt-2 text-lg font-medium">
-      목표&nbsp;{desiredLux.toLocaleString()}&nbsp;lx
-    </p>
+          <div className={`p-4 rounded-lg text-center border
+                           ${expectedLux>=desiredLux?'bg-green-50':'bg-yellow-50'}`}>
+            <p className="text-4xl font-bold">{expectedLux.toLocaleString()} lx</p>
+            <p className="mt-2 text-lg font-medium">
+              목표 {desiredLux.toLocaleString()} lx
+            </p>
 
-    {/* 달성률 바 */}
-    {desiredLux > 0 && (
-      <>
-        {(() => {
-          const ratio = Math.min(expectedLux / desiredLux, 1)
-          const percent = Math.round(ratio * 100)
+            {desiredLux>0 && (()=>{const r=Math.min(expectedLux/desiredLux,1)
+              const p=Math.round(r*100)
+              return(
+                <>
+                  <div className="mt-4 w-full bg-gray-200 h-3 rounded overflow-hidden">
+                    <div style={{width:`${p}%`}}
+                         className={`${r>=1?'bg-green-500':'bg-yellow-400'} h-3 rounded`}/>
+                  </div>
+                  <p className="mt-2 text-sm text-gray-600">달성률 {p}%</p>
+                </>
+            )})()}
+          </div>
 
-          return (
-            <>
-              <div className="mt-4 w-full bg-gray-200 h-3 rounded overflow-hidden">
-                <div
-                  style={{ width: `${percent}%` }}
-                  className={`${ratio >= 1 ? 'bg-green-500' : 'bg-yellow-400'} h-3 rounded`}
-                />
-              </div>
-              <p className="mt-2 text-sm text-gray-600">달성률&nbsp;{percent}%</p>
-            </>
-          )
-        })()}
-      </>
-    )}
-  </div>
-
-  <div className="flex justify-between text-sm">
-    <span>총&nbsp;{totalLumen.toLocaleString()}&nbsp;lm</span>
-    <span>총&nbsp;{totalWatt.toLocaleString()}&nbsp;W</span>
-  </div>
-</section>
+          <div className="flex justify-between text-sm">
+            <span>총 {totalLumen.toLocaleString()} lm</span>
+            <span>총 {totalWatt.toLocaleString()} W</span>
+          </div>
+        </section>
 
         {/* ▣ 선택된 조명 목록 ▣ */}
         <section className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 space-y-6">
@@ -383,44 +376,33 @@ function App() {
             : <>
                 <div className="max-h-80 overflow-y-auto">
                   {selectedLights.map(l=>(
-                   <div key={l.id}
-                   className="grid grid-cols-[1fr_auto_auto] items-center gap-4 border-b py-3">
-              
-                {/* ── ① 조명 정보 ── */}
-                <div>
-                  <p className="font-medium truncate">{l.name}</p>
-                  <p className="text-xs text-gray-500">
-                    {l.colorTemp}&nbsp;|&nbsp;{l.watt}&nbsp;W
-                  </p>
-                </div>
-              
-                {/* ── ② 수량 컨트롤 : 너비 고정 ── */}
-                <div className="flex items-center justify-center gap-px w-32">
-                  <button
-                    onClick={() => updateQty(l.id, Math.max(1, l.quantity - 1))}
-                    className="w-9 h-9 border rounded-l">−</button>
-              
-                  <input
-                    value={l.quantity}
-                    inputMode="numeric"
-                    onChange={e => {
-                      const v = e.target.value.replace(/[^0-9]/g, '')
-                      if (v) updateQty(l.id, +v)
-                    }}
-                    className="w-12 h-9 border-y text-center" />
-              
-                  <button
-                    onClick={() => updateQty(l.id, l.quantity + 1)}
-                    className="w-9 h-9 border rounded-r">＋</button>
-                </div>
-              
-                {/* ── ③ 삭제 버튼 ── */}
-                <button
-                  onClick={() => removeLight(l.id)}
-                  className="px-3 py-1 rounded text-red-600 border border-red-200 hover:bg-red-50">
-                  삭제
-                </button>
-              </div>
+                    <div key={l.id}
+                         className="grid grid-cols-[1fr_auto_auto] items-center gap-4 border-b py-3">
+                      <div>
+                        <p className="font-medium truncate">{l.name}</p>
+                        <p className="text-xs text-gray-500">
+                          {l.colorTemp}&nbsp;|&nbsp;{l.watt}&nbsp;W
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-center gap-px w-32">
+                        <button onClick={()=>updateQty(l.id,Math.max(1,l.quantity-1))}
+                                className="w-9 h-9 border rounded-l">−</button>
+                        <input value={l.quantity} inputMode="numeric"
+                               onChange={e=>{
+                                 const v=e.target.value.replace(/[^0-9]/g,'')
+                                 if(v) updateQty(l.id,+v)
+                               }}
+                               className="w-12 h-9 border-y text-center"/>
+                        <button onClick={()=>updateQty(l.id,l.quantity+1)}
+                                className="w-9 h-9 border rounded-r">＋</button>
+                      </div>
+
+                      <button onClick={()=>removeLight(l.id)}
+                              className="px-3 py-1 rounded text-red-600 border border-red-200 hover:bg-red-50">
+                        삭제
+                      </button>
+                    </div>
                   ))}
                 </div>
                 <p className="text-right text-sm text-gray-600">
@@ -430,7 +412,7 @@ function App() {
         </section>
 
         <p className="text-center text-xs text-gray-500">
-          E = Σ lm × UF × MF ÷ 면적&nbsp;&nbsp;|&nbsp;&nbsp;UF 자동 보정, MF = 0.8
+          E = Σ lm × UF × MF ÷ 면적 | UF 자동 보정, MF = 0.8
         </p>
       </div>
     </div>
