@@ -1,42 +1,51 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-/** 옵션 */
 interface Options {
-  /** 길게 눌렀다고 판단하기까지 지연(ms) - 기본 300 */
+  /** 길게 눌렀다고 판단하기까지 지연(ms) — 기본 300 */
   delay?: number
-  /** 길게 누른 뒤 반복 간격(ms) - 기본 80 */
+  /** 길게 누른 뒤 반복 간격(ms) — 기본 80 */
   step?:  number
 }
 
 /**
- * 버튼에 넣으면 -
- * ● `onMouseDown / onTouchStart` → 1회 실행 → delay 후 step 간격으로 반복  
- * ● `onMouseUp / onTouchEnd / onMouseLeave` → 정지
+ *   const long = useLongPress(() => change(+1))
+ *   <button {...long}>＋</button>
+ *
+ *  ● 첫 터치(클릭) 즉시 1 회 실행 → delay 후 step 간격으로 반복  
+ *  ● 손을 떼면(터치 End / Mouse Up / Leave) 타이머 해제
  */
-export function useLongPress(cb: () => void, { delay = 300, step = 80 }: Options = {}) {
-  // 브라우저 환경에 맞춰 number 타입으로
-  const startTimer = useRef<number | null>(null)
+export function useLongPress(
+  cb: () => void,
+  { delay = 300, step = 80 }: Options = {},
+) {
+  // 브라우저에서는 number 반환
+  const startTimer  = useRef<number | null>(null)
   const repeatTimer = useRef<number | null>(null)
 
+  /** 타이머 모두 해제 */
   const clear = useCallback(() => {
-    if (startTimer.current !== null)  clearTimeout(startTimer.current)
+    if (startTimer.current  !== null) clearTimeout(startTimer.current)
     if (repeatTimer.current !== null) clearInterval(repeatTimer.current)
   }, [])
 
-  const start = useCallback(() => {
-    cb()                                                // 첫 클릭 시 1회
-    startTimer.current = window.setTimeout(() => {
-      repeatTimer.current = window.setInterval(cb, step)   // 길게 누르면 반복
-    }, delay)
-  }, [cb, delay, step])
+  /** 길게 누르기 시작 */
+  const start = useCallback(
+    (e: React.MouseEvent | React.TouchEvent) => {
+      e.preventDefault()        // 모바일 ‘복사/공유’ 메뉴 방지
+      cb()                      // 첫 1 회
+      startTimer.current = window.setTimeout(() => {
+        repeatTimer.current = window.setInterval(cb, step)
+      }, delay)
+    },
+    [cb, delay, step],
+  )
 
-  useEffect(() => clear, [clear])        // 컴포넌트 언마운트 시 정리
+  useEffect(() => clear, [clear])   // 언마운트 시 정리
 
   return {
-    onMouseDown:  start,
-    onTouchStart: start,
-    onMouseUp:    clear,
-    onTouchEnd:   clear,
-    onMouseLeave: clear,
+    onPointerDown: start,   // 데스크톱·모바일 모두 대응
+    onPointerUp:   clear,
+    onPointerLeave: clear,
+    onContextMenu: e => e.preventDefault(),  // 길게 눌러 컨텍스트 메뉴 차단
   } as const
 }
