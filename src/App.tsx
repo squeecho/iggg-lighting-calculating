@@ -146,7 +146,7 @@ function App() {
 
   /* ──────────────────────────── 렌더 ──────────────────────────── */
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800 text-[1.2rem] leading-snug px-4 sm:px-6 md:px-8 lg:px-12 py-16">
+    <div className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800 leading-snug px-4 sm:px-6 md:px-8 lg:px-12 py-16">
       <div className="max-w-2xl w-full mx-auto space-y-16">
         {/* 로고 */}
         <div className="flex flex-col items-center">
