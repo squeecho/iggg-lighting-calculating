@@ -1,0 +1,46 @@
+/* ───────── 기본 글꼴 & 리셋 ───────── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;background:#f3f4f6;color:#1f2937;}
+
+/* ───────── 유리 카드 ───────── */
+.card-glass{
+  background:rgba(255,255,255,0.7);
+  backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,0.4);
+  border-radius:18px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.08);
+}
+
+/* ───────── 버튼 / 뱃지 ───────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;
+     padding:10px 18px;border:none;border-radius:12px;font-weight:600;
+     cursor:pointer;transition:transform .15s,background-color .15s;}
+.btn:hover{transform:scale(1.05);} .btn:active{transform:scale(.94);}
+.btn-blue{background:#2563eb;color:#fff;} .btn-blue:hover{background:#1e4ed8;}
+.btn-pur{background:#7c3aed;color:#fff;} .btn-pur:hover{background:#6d28d9;}
+
+.badge{padding:4px 12px;border:1px solid #d1d5db;border-radius:12px;
+       font-size:14px;cursor:pointer;transition:transform .15s;background:#fff;}
+.badge:hover{background:#f3f4f6;transform:scale(1.05);}
+.badge-active{background:#2563eb;color:#fff;border-color:#2563eb;}
+
+/* ───────── 인풋 ───────── */
+.input{width:100%;padding:12px 16px;border:1px solid #d1d5db;border-radius:12px;
+       font-size:16px;text-align:center;}
+.input:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 2px rgba(37,99,235,0.3);}
+
+/* ───────── 수량 조절 ───────── */
+.qty-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+         border:1px solid #d1d5db;background:#fff;font-size:18px;font-weight:700;
+         cursor:pointer;transition:background-color .15s,transform .1s;}
+.qty-btn:hover{background:#f9fafb;} .qty-btn:active{transform:scale(.9);}
+.qty-input{width:64px;height:36px;border-top:1px solid #d1d5db;border-bottom:1px solid #d1d5db;
+           text-align:center;font-size:17px;}
+
+/* ───────── 자잘한 텍스트 ───────── */
+.note{margin-top:4px;font-size:12px;color:#6b7280;}
+.number-font{font-variant-numeric:tabular-nums;}
+
+/* ───────── 얇은 스크롤바 ───────── */
+.scrollbar-thin::-webkit-scrollbar{width:6px;}
+.scrollbar-thin::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px;}

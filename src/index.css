@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 숫자 input 정렬 -- 기존에 쓰시던 클래스 */
+.number-font {
+  font-variant-numeric: tabular-nums;
+}
