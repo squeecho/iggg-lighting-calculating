@@ -146,11 +146,11 @@ function App() {
 
   /* ──────────────────────────── 렌더 ──────────────────────────── */
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800 leading-snug px-4 sm:px-6 md:px-8 lg:px-12 py-16">
+    <div className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-800 text-base leading-snug px-4 sm:px-6 md:px-8 lg:px-12 py-16">
       <div className="max-w-2xl w-full mx-auto space-y-16">
         {/* 로고 */}
         <div className="flex flex-col items-center">
-          <img src="/logo.png" alt="로고" className="w-30 h-auto mb-4 object-contain"/>
+          <img src="/logo.png" alt="로고" className="w-[120px] h-auto mb-4 object-contain"/>
           <h1 className="text-3xl font-bold">간이 조도 계산기</h1>
         </div>
 
@@ -348,7 +348,6 @@ function App() {
     {/* 달성률 바 */}
     {desiredLux > 0 && (
       <>
-        {/** 달성률 계산 */}
         {(() => {
           const ratio = Math.min(expectedLux / desiredLux, 1)
           const percent = Math.round(ratio * 100)
