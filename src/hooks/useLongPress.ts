@@ -1,51 +1,46 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
-interface Options {
-  /** 길게 눌렀다고 판단하기까지 지연(ms) — 기본 300 */
-  delay?: number
-  /** 길게 누른 뒤 반복 간격(ms) — 기본 80 */
-  step?:  number
-}
+/** long-press 지연(ms) 기본값 */
+const DEFAULT_DELAY = 300
 
-/**
- *   const long = useLongPress(() => change(+1))
- *   <button {...long}>＋</button>
- *
- *  ● 첫 터치(클릭) 즉시 1 회 실행 → delay 후 step 간격으로 반복  
- *  ● 손을 떼면(터치 End / Mouse Up / Leave) 타이머 해제
- */
+/** onLongPress(길게 누르기), onClick(짧게 탭) 두 가지 콜백을 지원 */
 export function useLongPress(
-  cb: () => void,
-  { delay = 300, step = 80 }: Options = {},
+  onLongPress: () => void,
+  onClick?: () => void,
+  delay: number = DEFAULT_DELAY
 ) {
-  // 브라우저에서는 number 반환
-  const startTimer  = useRef<number | null>(null)
-  const repeatTimer = useRef<number | null>(null)
+  /** setTimeout 핸들 저장 (ReturnType 으로 NodeJS 타입 의존 제거) */
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [pressed, setPressed] = useState(false)
 
-  /** 타이머 모두 해제 */
-  const clear = useCallback(() => {
-    if (startTimer.current  !== null) clearTimeout(startTimer.current)
-    if (repeatTimer.current !== null) clearInterval(repeatTimer.current)
-  }, [])
-
-  /** 길게 누르기 시작 */
+  /** 눌렀을 때 → 타이머 시작 */
   const start = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
-      e.preventDefault()        // 모바일 ‘복사/공유’ 메뉴 방지
-      cb()                      // 첫 1 회
-      startTimer.current = window.setTimeout(() => {
-        repeatTimer.current = window.setInterval(cb, step)
+    (e: React.MouseEvent<Element> | React.TouchEvent<Element>) => {
+      e.preventDefault()
+      timer.current = setTimeout(() => {
+        setPressed(true)
+        onLongPress()
       }, delay)
     },
-    [cb, delay, step],
+    [delay, onLongPress]
   )
 
-  useEffect(() => clear, [clear])   // 언마운트 시 정리
+  /** 떼었을 때 → 타이머 해제 & 상황별 콜백 */
+  const clear = useCallback(
+    (isInside: boolean) => {
+      if (timer.current) clearTimeout(timer.current)
+      if (!pressed && isInside && onClick) onClick()
+      setPressed(false)
+    },
+    [pressed, onClick]
+  )
 
+  /** 리턴 : 버튼/터치 공용 이벤트 바인딩 객체 */
   return {
-    onPointerDown: start,   // 데스크톱·모바일 모두 대응
-    onPointerUp:   clear,
-    onPointerLeave: clear,
-    onContextMenu: e => e.preventDefault(),  // 길게 눌러 컨텍스트 메뉴 차단
-  } as const
+    onMouseDown : start,
+    onTouchStart: start,
+    onMouseUp   : () => clear(true),
+    onTouchEnd  : () => clear(true),
+    onMouseLeave: () => clear(false),   // 마우스가 영역 밖으로 나가면 click 무시
+  }
 }
