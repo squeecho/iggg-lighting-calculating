@@ -185,7 +185,7 @@ function App() {
             {/* 희망 조도 */}
             <select value={desiredLux} onChange={e=>setDesiredLux(+e.target.value)}
                     className="w-full py-3 border rounded-lg text-center">
-              {Array.from({length:(800-50)/50+1},(_,i)=>50+i*50).map(v=>(
+              {Array.from({length:(1000-50)/50+1},(_,i)=>50+i*50).map(v=>(
                 <option key={v} value={v}>{v} lx</option>
               ))}
             </select>
