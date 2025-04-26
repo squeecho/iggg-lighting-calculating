@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import './App.css'
-import { useLongPress } from './hooks/useLongPress'  
 
 /* ───────── 타입 정의 ───────── */
 interface Light {
@@ -153,12 +152,6 @@ function App() {
     e.preventDefault()
     setSelectedLightColorTemps(p=>({...p,[name]:ct}))
     setTempQuantities(p=>({...p,[name]:1}))
-  }
-
-  // 페이지 이동 방지
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    return false
   }
 
   /* ──────────────────────────── 렌더 ──────────────────────────── */
