@@ -213,20 +213,24 @@ function App() {
           <p className="text-center text-xs text-gray-500">현재 적용 UF: {UF.toFixed(2)} (높이: {ufText(UF)})</p>
 
           {/* 희망 조도 */}
-          <select 
-            value={desiredLux} 
-            onChange={e=>{
-              const value = +e.target.value;
-              setDesiredLux(value);
-              // 포커스 해제하여 선택 UI가 즉시 닫히도록 함
-              e.target.blur();
-            }}
-            className="w-full py-2.5 border rounded-lg text-center"
-          >
-            {Array.from({length:(1000-50)/50+1},(_,i)=>50+i*50).map(v=>(
-              <option key={v} value={v}>{v} lx</option>
-            ))}
-          </select>
+          <div className="relative">
+            <span className="absolute left-3 top-0 h-full flex items-center text-gray-500">목표 조도</span>
+            
+            <select 
+              value={desiredLux} 
+              onChange={e=>{
+                const value = +e.target.value;
+                setDesiredLux(value);
+                // 포커스 해제하여 선택 UI가 즉시 닫히도록 함
+                e.target.blur();
+              }}
+              className="w-full pl-14 pr-14 py-2.5 border rounded-lg text-center"
+            >
+              {Array.from({length:(1000-50)/50+1},(_,i)=>50+i*50).map(v=>(
+                <option key={v} value={v}>{v} lx</option>
+              ))}
+            </select>
+          </div>
 
           {/* 공간 유형 */}
           <div className="space-y-1">
