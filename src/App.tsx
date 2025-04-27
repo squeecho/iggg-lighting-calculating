@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import './App.css'
+import { useLongPress } from './hooks/useLongPress'
 
 /* ───────── 타입 정의 ───────── */
 interface Light {
@@ -188,10 +189,13 @@ function App() {
               <div className="absolute left-14 top-0 h-full flex items-center">
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    field.set(String(Math.max(0, Number(field.val||0)-1)));
-                  }}
+                  {...useLongPress(
+                    () => field.set(String(Math.max(0, Number(field.val||0)-1))),
+                    undefined,
+                    300,
+                    true,
+                    150
+                  )}
                   className="h-[40px] px-2 flex items-center justify-center border rounded">−</button>
               </div>
 
@@ -199,10 +203,13 @@ function App() {
               <div className="absolute right-14 top-0 h-full flex items-center">
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    field.set(String(Math.max(0, Number(field.val||0)+1)));
-                  }}
+                  {...useLongPress(
+                    () => field.set(String(Math.max(0, Number(field.val||0)+1))),
+                    undefined,
+                    300,
+                    true,
+                    150
+                  )}
                   className="h-[40px] px-2 flex items-center justify-center border rounded">＋</button>
               </div>
 
@@ -468,10 +475,13 @@ function App() {
                       <div className="flex items-center justify-center gap-px w-[90px] sm:w-32">
                         {/* − */}
                         <button type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            updateQty(l.id,Math.max(1,l.quantity-1));
-                          }}
+                          {...useLongPress(
+                            () => updateQty(l.id, Math.max(1, l.quantity-1)),
+                            undefined,
+                            300,
+                            true,
+                            150
+                          )}
                           className="w-7 h-9 sm:w-9 border rounded-l">−</button>
 
                         <input 
@@ -491,10 +501,13 @@ function App() {
 
                         {/* ＋ */}
                         <button type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            updateQty(l.id,l.quantity+1);
-                          }}
+                          {...useLongPress(
+                            () => updateQty(l.id, l.quantity+1),
+                            undefined,
+                            300,
+                            true,
+                            150
+                          )}
                           className="w-7 h-9 sm:w-9 border rounded-r">＋</button>
                       </div>
                     </div>
