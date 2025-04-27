@@ -445,7 +445,16 @@ function App() {
                 <div className="max-h-80 overflow-y-auto overflow-x-hidden">
                   {selectedLights.map(l=>(
                     <div key={l.id}
-                         className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 sm:gap-4 border-b py-3">
+                         className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-4 border-b py-3">
+                      <button type="button" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          removeLight(l.id);
+                        }}
+                        className="px-2 sm:px-3 py-1 rounded text-red-600 border border-red-200 hover:bg-red-50 whitespace-nowrap">
+                        삭제
+                      </button>
+
                       <div className="min-w-0 pr-1">
                         <p className="font-medium truncate max-w-[120px] sm:max-w-full">{l.name}</p>
                         <p className="text-xs text-gray-500 truncate">
@@ -488,15 +497,6 @@ function App() {
                           }}
                           className="w-7 h-9 sm:w-9 border rounded-r">＋</button>
                       </div>
-
-                      <button type="button" 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          removeLight(l.id);
-                        }}
-                        className="px-2 sm:px-3 py-1 rounded text-red-600 border border-red-200 hover:bg-red-50 whitespace-nowrap">
-                        삭제
-                      </button>
                     </div>
                   ))}
                 </div>
