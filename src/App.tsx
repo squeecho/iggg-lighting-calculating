@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import './App.css'
-import { useLongPress } from './hooks/useLongPress'
 
 /* ───────── 타입 정의 ───────── */
 interface Light {
