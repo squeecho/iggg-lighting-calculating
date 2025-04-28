@@ -67,8 +67,9 @@ function App() {
     { name:'오스람LED 2인치(ledvance)', lumenByColorTemp:{'3000K':560,'4000K':560,'5700K':560}, watt:8, colorTemps:['3000K','4000K','5700K'], size:'2인치', category:'다운라이트' },
     { name:'오스람LED 3인치', lumenByColorTemp:{'3000K':540,'4000K':580,'6500K':580}, watt:8, colorTemps:['3000K','4000K','6500K'], size:'3인치', category:'다운라이트' },
     { name:'오스람LED 6인치(ledvance)', lumenByColorTemp:{'3000K':1300,'4000K':1400,'5700K':1400}, watt:20, colorTemps:['3000K','4000K','5700K'], size:'6인치', category:'다운라이트' },
-    { name:'T5', lumenByColorTemp:{'3000K':472,'4000K':472,'6500K':472}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명' },
-    { name:'T7(T라인, 레일용)', lumenByColorTemp:{'3000K':400,'4000K':400,'6500K':400}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명' },
+    { name:'오스람 T5(ledvance)', lumenByColorTemp:{'3000K':320,'4000K':320,'6500K':320}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명' },
+    { name:'진성T8(T7, T라인)', lumenByColorTemp:{'3000K':560,'4000K':560,'6500K':560}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명' },
+    { name:'예도LED T33', lumenByColorTemp:{'3000K':525,'4000K':525,'6500K':525}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명' },
     { name:'T70광폭', lumenByColorTemp:{'3000K':2700,'4000K':2700,'6500K':2700}, watt:30, colorTemps:['3000K','4000K','6500K'], size:'600mm', category:'라인조명' },
     { name:'LED PAR30 (1등급 집중형)', lumenByColorTemp:{'3000K':1590,'4000K':1590,'6500K':1590}, watt:15, colorTemps:['3000K','4000K','6500K'], size:'PAR30', category:'레일조명' },
     { name:'LED PAR30 (일반집중,확산형)', lumenByColorTemp:{'3000K':1200,'4000K':1200,'6500K':1200}, watt:15, colorTemps:['3000K','4000K','6500K'], size:'PAR30', category:'레일조명' },
@@ -112,6 +113,7 @@ function App() {
   /* ---------- 조명 추가/삭제 ---------- */
   const addLight = useCallback((light:LightData,ct:string,qty:number)=>{
     if(qty<=0) return
+    if(!ct || !light.lumenByColorTemp[ct]) return
     const lumen = light.lumenByColorTemp[ct]||0
     const id    = `${light.name}-${ct}`
     setSelectedLights(prev=>{
@@ -151,8 +153,10 @@ function App() {
 
   const setCT = (name:string,ct:string, e: React.MouseEvent)=>{
     e.preventDefault()
-    setSelectedLightColorTemps(p=>({...p,[name]:ct}))
-    setTempQuantities(p=>({...p,[name]:1}))
+    if(name && ct) {
+      setSelectedLightColorTemps(p=>({...p,[name]:ct}))
+      setTempQuantities(p=>({...p,[name]:1}))
+    }
   }
 
   /* ──────────────────────────── 렌더 ──────────────────────────── */
@@ -189,13 +193,10 @@ function App() {
               <div className="absolute left-14 top-0 h-full flex items-center">
                 <button
                   type="button"
-                  {...useLongPress(
-                    () => field.set(String(Math.max(0, Number(field.val||0)-1))),
-                    undefined,
-                    300,
-                    true,
-                    150
-                  )}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    field.set(String(Math.max(0, Number(field.val||0)-1)));
+                  }}
                   className="h-[40px] px-2 flex items-center justify-center border rounded">−</button>
               </div>
 
@@ -203,13 +204,10 @@ function App() {
               <div className="absolute right-14 top-0 h-full flex items-center">
                 <button
                   type="button"
-                  {...useLongPress(
-                    () => field.set(String(Math.max(0, Number(field.val||0)+1))),
-                    undefined,
-                    300,
-                    true,
-                    150
-                  )}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    field.set(String(Math.max(0, Number(field.val||0)+1)));
+                  }}
                   className="h-[40px] px-2 flex items-center justify-center border rounded">＋</button>
               </div>
 
@@ -340,8 +338,9 @@ function App() {
                         onClick={(e) => {
                           e.preventDefault();
                           setTempQuantities(p=>{
-                            const cur=p[light.name]||1
-                            return {...p,[light.name]:Math.max(1,+cur-1)}
+                            const cur = p[light.name];
+                            const numValue = typeof cur === 'number' ? cur : (cur ? parseInt(cur, 10) : 1);
+                            return {...p,[light.name]:Math.max(1, numValue-1)}
                           });
                         }}
                         className="w-9 h-9 border rounded-l">−</button>
@@ -351,7 +350,10 @@ function App() {
                         inputMode="numeric"
                         onChange={e=>{
                           const v=e.target.value.replace(/[^0-9]/g,'')
-                          if(v) setTempQuantities({...tempQuantities,[light.name]:+v})
+                          if(v) {
+                            const numValue = parseInt(v, 10);
+                            setTempQuantities({...tempQuantities,[light.name]: numValue});
+                          }
                           else setTempQuantities({...tempQuantities,[light.name]:1})
                         }}
                         onFocus={e => {
@@ -364,8 +366,9 @@ function App() {
                         onClick={(e) => {
                           e.preventDefault();
                           setTempQuantities(p=>{
-                            const cur=p[light.name]||1
-                            return {...p,[light.name]:+cur+1}
+                            const cur = p[light.name];
+                            const numValue = typeof cur === 'number' ? cur : (cur ? parseInt(cur, 10) : 1);
+                            return {...p,[light.name]: numValue+1}
                           });
                         }}
                         className="w-9 h-9 border rounded-r">＋</button>
@@ -374,8 +377,11 @@ function App() {
                     <button type="button"
                       onClick={(e) => {
                         e.preventDefault();
-                        addLight(light,selectedLightColorTemps[light.name],Number(tempQuantities[light.name]||1));
-                        setTempQuantities({...tempQuantities,[light.name]:1});
+                        const colorTemp = selectedLightColorTemps[light.name];
+                        if(colorTemp) {
+                          addLight(light, colorTemp, Number(tempQuantities[light.name]||1));
+                          setTempQuantities({...tempQuantities,[light.name]:1});
+                        }
                       }}
                       className="px-4 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
                       추가
@@ -475,13 +481,10 @@ function App() {
                       <div className="flex items-center justify-center gap-px w-[90px] sm:w-32">
                         {/* − */}
                         <button type="button"
-                          {...useLongPress(
-                            () => updateQty(l.id, Math.max(1, l.quantity-1)),
-                            undefined,
-                            300,
-                            true,
-                            150
-                          )}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            updateQty(l.id,Math.max(1,l.quantity-1));
+                          }}
                           className="w-7 h-9 sm:w-9 border rounded-l">−</button>
 
                         <input 
@@ -501,13 +504,10 @@ function App() {
 
                         {/* ＋ */}
                         <button type="button"
-                          {...useLongPress(
-                            () => updateQty(l.id, l.quantity+1),
-                            undefined,
-                            300,
-                            true,
-                            150
-                          )}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            updateQty(l.id,l.quantity+1);
+                          }}
                           className="w-7 h-9 sm:w-9 border rounded-r">＋</button>
                       </div>
                     </div>
