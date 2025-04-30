@@ -41,6 +41,8 @@ function App() {
   const [customLightWatt ,setCustomLightWatt ] = useState(0)
   const [inputMode, setInputMode] = useState<'lumen' | 'watt'>('lumen')
   const [customLightType, setCustomLightType] = useState('매립조명')
+  const [customEfficiency, setCustomEfficiency] = useState<number>(80)
+  const [efficiencyError, setEfficiencyError] = useState<string>('')
 
   const [totalLumen,setTotalLumen] = useState(0)
   const [totalWatt ,setTotalWatt ] = useState(0)
@@ -180,10 +182,16 @@ function App() {
   const addCustomLight = useCallback((e: React.MouseEvent)=>{
     e.preventDefault()
     if(!customLightName||customLightLumen<=0||customLightWatt<=0) return
+    
+    // 사용자 정의 효율이 범위를 벗어난 경우 기본값 적용
+    const finalLumen = customLightType === '기타' && (customEfficiency < 40 || customEfficiency > 200 || customEfficiency === 0)
+      ? customLightWatt * 80  // 기본값 80 lm/W 적용
+      : customLightLumen;
+    
     setSelectedLights(p=>[...p,{
       id:Date.now().toString(),
       name:customLightName,
-      lumen:customLightLumen,
+      lumen:finalLumen,
       watt:customLightWatt,
       colorTemp:'커스텀',
       size:'커스텀',
@@ -192,7 +200,7 @@ function App() {
       type:'커스텀'
     }])
     setCustomLightName(''); setCustomLightLumen(0); setCustomLightWatt(0)
-  },[customLightName, customLightLumen, customLightWatt, inputMode, customLightType])
+  },[customLightName, customLightLumen, customLightWatt, inputMode, customLightType, customEfficiency])
 
   const removeLight = useCallback((id:string)=>setSelectedLights(p=>p.filter(l=>l.id!==id)),[])
   const updateQty   = useCallback((id:string,qty:number)=>{
@@ -242,7 +250,11 @@ function App() {
   }
 
   // 조명 종류별 광효율
-  const getLumensPerWatt = useCallback((lightType: string) => {
+  const getLumensPerWatt = useCallback((lightType: string, customEff?: number) => {
+    if (lightType === '기타') {
+      return customEff || 80;
+    }
+    
     switch(lightType) {
       case '매립조명': return 90;
       case '직부조명': return 90;
@@ -553,61 +565,141 @@ function App() {
           </div>
 
           {inputMode === 'lumen' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <input placeholder="이름" value={customLightName}
-                    onChange={e=>setCustomLightName(e.target.value)}
-                    className="border px-3 py-2 rounded"/>
-              <input placeholder="루멘" type="number" min={1} value={customLightLumen||''}
-                    onChange={e=>{
-                      const lumen = +e.target.value;
-                      setCustomLightLumen(lumen);
-                      // 루멘 입력 시 와트 자동 계산 (효율 90lm/W 기준)
-                      setCustomLightWatt(lumen > 0 ? Math.round((lumen / 90) * 10) / 10 : 0);
-                    }}
-                    className="border px-3 py-2 rounded"/>
+            <div className="grid grid-cols-1 gap-3">
+              <div className="relative">
+                <span className="absolute left-3 top-0 h-full flex items-center text-gray-500">이름</span>
+                <input 
+                  value={customLightName}
+                  onChange={e=>setCustomLightName(e.target.value)}
+                  className="w-full pl-14 pr-4 py-2.5 border rounded-lg text-center"
+                />
+              </div>
+              <div className="relative">
+                <span className="absolute left-3 top-0 h-full flex items-center text-gray-500">루멘</span>
+                <input 
+                  type="number" 
+                  min={1} 
+                  value={customLightLumen||''}
+                  onChange={e=>{
+                    const lumen = +e.target.value;
+                    setCustomLightLumen(lumen);
+                    // 루멘 입력 시 와트 자동 계산 (효율 90lm/W 기준)
+                    setCustomLightWatt(lumen > 0 ? Math.round((lumen / 90) * 10) / 10 : 0);
+                  }}
+                  className="w-full pl-14 pr-4 py-2.5 border rounded-lg text-center"
+                />
+              </div>
               {customLightLumen > 0 && (
-                <div className="text-gray-500 text-sm md:col-span-2">
+                <div className="text-gray-500 text-sm">
                   <p>자동 계산된 와트: {customLightWatt} W (효율 90lm/W 기준)</p>
                 </div>
               )}
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-3">
-              <select
-                value={customLightType}
-                onChange={e => setCustomLightType(e.target.value)}
-                className="border px-3 py-2 rounded"
-              >
-                <option value="매립조명">매립조명 (다운라이트, 평판등, 슬림매입등)</option>
-                <option value="직부조명">직부조명 (COB 원통등, 노출형 실린더 등)</option>
-                <option value="간접조명">간접조명 (T5, 몰딩 안쪽 라인바 등)</option>
-                <option value="레일조명">레일조명 (스포트라이트, 집어등, 줌형 등)</option>
-                <option value="전구형 조명">전구형 조명 (E26 벌브, 팬던트, 샹들리에 등)</option>
-              </select>
-              <input 
-                placeholder="이름" 
-                value={customLightName}
-                onChange={e => setCustomLightName(e.target.value)}
-                className="border px-3 py-2 rounded"
-              />
-              <input 
-                placeholder="와트" 
-                type="number" 
-                min={1} 
-                value={customLightWatt||''}
-                onChange={e => {
-                  const watt = +e.target.value;
-                  setCustomLightWatt(watt);
-                  
-                  // 와트 기반 루멘 자동 계산
-                  const lumensPerWatt = getLumensPerWatt(customLightType);
-                  setCustomLightLumen(watt * lumensPerWatt);
-                }}
-                className="border px-3 py-2 rounded"
-              />
+              <div className="relative">
+                <span className="absolute left-3 top-0 h-full flex items-center text-gray-500">조명 종류</span>
+                <select
+                  value={customLightType}
+                  onChange={e => {
+                    setCustomLightType(e.target.value);
+                    // 기타 외의 옵션 선택 시 에러 메시지 초기화
+                    if (e.target.value !== '기타') {
+                      setEfficiencyError('');
+                    }
+                    
+                    // 이미 와트 값이 있으면 새 광효율로 루멘 재계산
+                    if (customLightWatt > 0) {
+                      const eff = e.target.value === '기타' ? customEfficiency : getLumensPerWatt(e.target.value);
+                      setCustomLightLumen(customLightWatt * eff);
+                    }
+                  }}
+                  className="w-full pl-24 pr-4 py-2.5 border rounded-lg appearance-none text-center"
+                >
+                  <option value="매립조명">매립조명 (다운라이트, 평판등, 슬림매입등)</option>
+                  <option value="직부조명">직부조명 (COB 원통등, 노출형 실린더 등)</option>
+                  <option value="간접조명">간접조명 (T5, 몰딩 안쪽 라인바 등)</option>
+                  <option value="레일조명">레일조명 (스포트라이트, 집어등, 줌형 등)</option>
+                  <option value="전구형 조명">전구형 조명 (E26 벌브, 팬던트, 샹들리에 등)</option>
+                  <option value="기타">기타 (특수 조명 등 – 직접 입력)</option>
+                </select>
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500">
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </div>
+              </div>
+              
+              {customLightType === '기타' && (
+                <div className="relative">
+                  <span className="absolute left-3 top-0 h-full flex items-center text-gray-500">광효율</span>
+                  <input 
+                    type="number"
+                    min="40"
+                    max="200"
+                    placeholder="40~200 사이 값"
+                    value={customEfficiency || ''}
+                    onChange={e => {
+                      const value = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
+                      setCustomEfficiency(value);
+                      
+                      // 유효성 검사
+                      if (value < 40 || value > 200) {
+                        setEfficiencyError('40~200 사이의 값을 입력하세요.');
+                      } else {
+                        setEfficiencyError('');
+                        
+                        // 이미 와트 값이 있으면 새 광효율로 루멘 재계산
+                        if (customLightWatt > 0) {
+                          setCustomLightLumen(customLightWatt * value);
+                        }
+                      }
+                    }}
+                    className={`w-full pl-14 pr-4 py-2.5 border rounded-lg text-center ${efficiencyError ? 'border-red-500' : ''}`}
+                  />
+                  {efficiencyError && (
+                    <p className="text-red-500 text-xs mt-1">{efficiencyError}</p>
+                  )}
+                </div>
+              )}
+              
+              <div className="relative">
+                <span className="absolute left-3 top-0 h-full flex items-center text-gray-500">이름</span>
+                <input 
+                  value={customLightName}
+                  onChange={e => setCustomLightName(e.target.value)}
+                  className="w-full pl-14 pr-4 py-2.5 border rounded-lg text-center"
+                />
+              </div>
+              
+              <div className="relative">
+                <span className="absolute left-3 top-0 h-full flex items-center text-gray-500">와트</span>
+                <input 
+                  type="number" 
+                  min={1} 
+                  value={customLightWatt||''}
+                  onChange={e => {
+                    const watt = +e.target.value;
+                    setCustomLightWatt(watt);
+                    
+                    // 와트 기반 루멘 자동 계산
+                    const eff = customLightType === '기타' 
+                      ? (customEfficiency < 40 || customEfficiency > 200 ? 80 : customEfficiency) 
+                      : getLumensPerWatt(customLightType);
+                    
+                    setCustomLightLumen(watt * eff);
+                  }}
+                  className="w-full pl-14 pr-4 py-2.5 border rounded-lg text-center"
+                />
+              </div>
+              
               <div className="text-gray-500 text-sm">
                 {customLightWatt > 0 && (
-                  <p>자동 계산된 루멘: {customLightLumen} lm (기준 광효율: {getLumensPerWatt(customLightType)} lm/W)</p>
+                  <p>자동 계산된 루멘: {customLightLumen} lm (기준 광효율: {
+                    customLightType === '기타' 
+                      ? (customEfficiency < 40 || customEfficiency > 200 || customEfficiency === 0 ? 80 : customEfficiency) 
+                      : getLumensPerWatt(customLightType)
+                  } lm/W)</p>
                 )}
               </div>
             </div>
