@@ -92,28 +92,28 @@ function App() {
     { name:'간접박스 속 동성LED 슬림 라인바', lumenByColorTemp:{'3000K':92,'4000K':92,'6500K':92}, watt:1.2, colorTemps:['3000K','4000K','6500K'], size:'100mm', category:'간접조명', thumbnail:'/images/lights/indirect_dongsung.png' },
     // T20 마그네틱 조명 추가
     // 라인 확산형
-    { name:'라인 확산형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W300×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_12w.png' },
-    { name:'라인 확산형 등기구 24W', lumenByColorTemp:{'3000K':1800,'4000K':1800}, watt:24, colorTemps:['3000K','4000K'], size:'W600×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_24w.png' },
-    { name:'라인 확산형 등기구 30W', lumenByColorTemp:{'3000K':2250,'4000K':2250}, watt:30, colorTemps:['3000K','4000K'], size:'W900×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_30w.png' },
-    { name:'라인 확산형 등기구 40W', lumenByColorTemp:{'3000K':3000,'4000K':3000}, watt:40, colorTemps:['3000K','4000K'], size:'W1200×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_40w.png' },
+    { name:'라인 확산형 등기구 12W', lumenByColorTemp:{'3000K':960,'4000K':960}, watt:12, colorTemps:['3000K','4000K'], size:'W300×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_12w.png' },
+    { name:'라인 확산형 등기구 24W', lumenByColorTemp:{'3000K':1920,'4000K':1920}, watt:24, colorTemps:['3000K','4000K'], size:'W600×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_24w.png' },
+    { name:'라인 확산형 등기구 30W', lumenByColorTemp:{'3000K':2400,'4000K':2400}, watt:30, colorTemps:['3000K','4000K'], size:'W900×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_30w.png' },
+    { name:'라인 확산형 등기구 40W', lumenByColorTemp:{'3000K':3200,'4000K':3200}, watt:40, colorTemps:['3000K','4000K'], size:'W1200×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_40w.png' },
     // 스타 집중형
-    { name:'스타 집중형 등기구 6W', lumenByColorTemp:{'3000K':450,'4000K':450}, watt:6, colorTemps:['3000K','4000K'], size:'W110×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_6w.png' },
-    { name:'스타 집중형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W220×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_12w.png' },
-    { name:'스타 집중형 등기구 18W', lumenByColorTemp:{'3000K':1350,'4000K':1350}, watt:18, colorTemps:['3000K','4000K'], size:'W330×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_18w.png' },
-    { name:'스타 집중형 등기구 24W', lumenByColorTemp:{'3000K':1800,'4000K':1800}, watt:24, colorTemps:['3000K','4000K'], size:'W440×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_24w.png' },
-    { name:'스타 집중형 등기구 30W', lumenByColorTemp:{'3000K':2250,'4000K':2250}, watt:30, colorTemps:['3000K','4000K'], size:'W550×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_30w.png' },
-    { name:'스타 집중형 등기구 36W', lumenByColorTemp:{'3000K':2700,'4000K':2700}, watt:36, colorTemps:['3000K','4000K'], size:'W660×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_36w.png' },
+    { name:'스타 집중형 등기구 6W', lumenByColorTemp:{'3000K':480,'4000K':480}, watt:6, colorTemps:['3000K','4000K'], size:'W110×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_6w.png' },
+    { name:'스타 집중형 등기구 12W', lumenByColorTemp:{'3000K':960,'4000K':960}, watt:12, colorTemps:['3000K','4000K'], size:'W220×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_12w.png' },
+    { name:'스타 집중형 등기구 18W', lumenByColorTemp:{'3000K':1440,'4000K':1440}, watt:18, colorTemps:['3000K','4000K'], size:'W330×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_18w.png' },
+    { name:'스타 집중형 등기구 24W', lumenByColorTemp:{'3000K':1920,'4000K':1920}, watt:24, colorTemps:['3000K','4000K'], size:'W440×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_24w.png' },
+    { name:'스타 집중형 등기구 30W', lumenByColorTemp:{'3000K':2400,'4000K':2400}, watt:30, colorTemps:['3000K','4000K'], size:'W550×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_30w.png' },
+    { name:'스타 집중형 등기구 36W', lumenByColorTemp:{'3000K':2880,'4000K':2880}, watt:36, colorTemps:['3000K','4000K'], size:'W660×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_36w.png' },
     // 스타 폴더 집중형
-    { name:'스타 폴더 집중형 등기구 6W', lumenByColorTemp:{'3000K':450,'4000K':450}, watt:6, colorTemps:['3000K','4000K'], size:'W112×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_6w.png' },
-    { name:'스타 폴더 집중형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W225×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_12w.png' },
-    { name:'스타 폴더 집중형 등기구 18W', lumenByColorTemp:{'3000K':1350,'4000K':1350}, watt:18, colorTemps:['3000K','4000K'], size:'W325×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_18w.png' },
+    { name:'스타 폴더 집중형 등기구 6W', lumenByColorTemp:{'3000K':480,'4000K':480}, watt:6, colorTemps:['3000K','4000K'], size:'W112×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_6w.png' },
+    { name:'스타 폴더 집중형 등기구 12W', lumenByColorTemp:{'3000K':960,'4000K':960}, watt:12, colorTemps:['3000K','4000K'], size:'W225×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_12w.png' },
+    { name:'스타 폴더 집중형 등기구 18W', lumenByColorTemp:{'3000K':1440,'4000K':1440}, watt:18, colorTemps:['3000K','4000K'], size:'W325×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_18w.png' },
     // 스포트 집중형
-    { name:'스포트 집중형 등기구 7W', lumenByColorTemp:{'3000K':525,'4000K':525}, watt:7, colorTemps:['3000K','4000K'], size:'W35×H80mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/spot_7w.png' },
-    { name:'스포트 집중형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W42×H100mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/spot_12w.png' },
-    { name:'스포트 집중형 등기구 20W', lumenByColorTemp:{'3000K':1500,'4000K':1500}, watt:20, colorTemps:['3000K','4000K'], size:'W48×H105mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/spot_20w.png' },
+    { name:'스포트 집중형 등기구 7W', lumenByColorTemp:{'3000K':560,'4000K':560}, watt:7, colorTemps:['3000K','4000K'], size:'W35×H80mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/spot_7w.png' },
+    { name:'스포트 집중형 등기구 12W', lumenByColorTemp:{'3000K':960,'4000K':960}, watt:12, colorTemps:['3000K','4000K'], size:'W42×H100mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/spot_12w.png' },
+    { name:'스포트 집중형 등기구 20W', lumenByColorTemp:{'3000K':1600,'4000K':1600}, watt:20, colorTemps:['3000K','4000K'], size:'W48×H105mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/spot_20w.png' },
     // ZOOM 스포트 집중형
-    { name:'ZOOM 스포트 집중형 등기구 10W', lumenByColorTemp:{'3000K':750,'4000K':750}, watt:10, colorTemps:['3000K','4000K'], size:'W65×H128mm', category:'T20 마그네틱', type:'ZOOM 스포트 집중형', thumbnail:'/images/lights/zoom_10w.png' },
-    { name:'ZOOM 스포트 집중형 등기구 20W', lumenByColorTemp:{'3000K':1500,'4000K':1500}, watt:20, colorTemps:['3000K','4000K'], size:'W85×H145mm', category:'T20 마그네틱', type:'ZOOM 스포트 집중형', thumbnail:'/images/lights/zoom_20w.png' },
+    { name:'ZOOM 스포트 집중형 등기구 10W', lumenByColorTemp:{'3000K':800,'4000K':800}, watt:10, colorTemps:['3000K','4000K'], size:'W65×H128mm', category:'T20 마그네틱', type:'ZOOM 스포트 집중형', thumbnail:'/images/lights/zoom_10w.png' },
+    { name:'ZOOM 스포트 집중형 등기구 20W', lumenByColorTemp:{'3000K':1600,'4000K':1600}, watt:20, colorTemps:['3000K','4000K'], size:'W85×H145mm', category:'T20 마그네틱', type:'ZOOM 스포트 집중형', thumbnail:'/images/lights/zoom_20w.png' },
   ]
 
   /* ---------- UF 계산 ---------- */
