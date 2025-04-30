@@ -81,8 +81,8 @@ function App() {
     { name:'오스람 평판등(1285*320)', lumenByColorTemp:{'4000K':4500,'5700K':4500}, watt:50, colorTemps:['4000K','5700K'], size:'1285x320mm', category:'평판등' },
     { name:'장수LED 십자등', lumenByColorTemp:{'6500K':4200}, watt:55, colorTemps:['6500K'], size:'L580*D60', category:'평판등' },
     { name:'장수LED 스키등', lumenByColorTemp:{'2700K':4500,'6500K':4500}, watt:40, colorTemps:['2700K','6500K'], size:'800*60', category:'평판등' },
-    { name:'간접박스 속 T5(70%조정)', lumenByColorTemp:{'3000K':320,'4000K':320,'6500K':320}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'간접조명' },
-    { name:'동성LED 슬림 라인바', lumenByColorTemp:{'3000K':92,'4000K':92,'6500K':92}, watt:1.2, colorTemps:['3000K','4000K','6500K'], size:'100mm', category:'간접조명' },
+    { name:'간접박스 속 오스람 T5', lumenByColorTemp:{'3000K':320,'4000K':320,'6500K':320}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'간접조명' },
+    { name:'간접박스 속 동성LED 슬림 라인바', lumenByColorTemp:{'3000K':92,'4000K':92,'6500K':92}, watt:1.2, colorTemps:['3000K','4000K','6500K'], size:'100mm', category:'간접조명' },
   ]
 
   /* ---------- UF 계산 ---------- */
