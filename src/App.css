@@ -44,3 +44,32 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,Helvetica,Ari
 /* ───────── 얇은 스크롤바 ───────── */
 .scrollbar-thin::-webkit-scrollbar{width:6px;}
 .scrollbar-thin::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px;}
+
+/* ───────── iOS 셀렉트 수정 ───────── */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  text-indent: 1px;
+  text-overflow: '';
+  padding-right: 30px !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) { 
+  select {
+    padding-right: 30px !important;
+    text-align-last: center !important;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+  }
+  
+  select option {
+    text-align: center;
+  }
+}

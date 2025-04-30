@@ -309,17 +309,13 @@ function App() {
                 // 포커스 해제하여 선택 UI가 즉시 닫히도록 함
                 e.target.blur();
               }}
-              className="w-full pl-14 pr-14 py-2.5 border rounded-lg text-center appearance-none"
+              className="w-full pl-14 pr-14 py-2.5 border rounded-lg text-center"
+              style={{textAlignLast: 'center'}}
             >
               {Array.from({length:(1000-50)/50+1},(_,i)=>50+i*50).map(v=>(
                 <option key={v} value={v}>{v} lx</option>
               ))}
             </select>
-            <div className="absolute right-6 top-1/2 transform -translate-y-1/2 pointer-events-none">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500">
-                <path d="M4 6l4 4 4-4" />
-              </svg>
-            </div>
           </div>
 
           {/* 공간 유형 */}
