@@ -14,6 +14,17 @@ interface Light {
   type?: string
   thumbnail?: string
 }
+
+// 커스텀 조명을 저장하기 위한 인터페이스
+interface SavedCustomLight {
+  id: string
+  name: string
+  lumen: number
+  watt: number
+  type: string
+  efficiency?: number
+}
+
 interface SpaceType { name: string; lux: number }
 interface LightData {
   name: string
@@ -57,6 +68,10 @@ function App() {
 
   const MF = 0.8
   const [UF,setUF] = useState(0.7)
+
+  // 저장된 커스텀 조명
+  const [savedCustomLights, setSavedCustomLights] = useState<SavedCustomLight[]>([])
+  const [showSavedLights, setShowSavedLights] = useState(false)
 
   /* ---------- 상수 ---------- */
   const spaceTypes:SpaceType[] = [
@@ -178,6 +193,70 @@ function App() {
     })
     setSelectedLightColorTemps(p=>{const n={...p}; delete n[light.name]; return n})
   },[])
+
+  // 앱 시작 시 저장된 커스텀 조명 로드
+  useEffect(() => {
+    const savedLights = localStorage.getItem('customLights')
+    if (savedLights) {
+      try {
+        setSavedCustomLights(JSON.parse(savedLights))
+      } catch (e) {
+        console.error('저장된 조명을 불러오는 중 오류 발생:', e)
+      }
+    }
+  }, [])
+
+  // 저장된 커스텀 조명 저장 함수
+  const saveCustomLight = useCallback(() => {
+    if (!customLightName || customLightLumen <= 0 || customLightWatt <= 0) return
+
+    const newLight: SavedCustomLight = {
+      id: Date.now().toString(),
+      name: customLightName,
+      lumen: customLightLumen,
+      watt: customLightWatt,
+      type: customLightType,
+      efficiency: customLightType === '기타' ? customEfficiency : undefined
+    }
+
+    const updatedLights = [...savedCustomLights, newLight]
+    setSavedCustomLights(updatedLights)
+    localStorage.setItem('customLights', JSON.stringify(updatedLights))
+  }, [customLightName, customLightLumen, customLightWatt, customLightType, customEfficiency, savedCustomLights])
+
+  // 저장된 커스텀 조명 로드 함수
+  const loadCustomLight = useCallback((light: SavedCustomLight) => {
+    setCustomLightName(light.name)
+    setCustomLightLumen(light.lumen)
+    setCustomLightWatt(light.watt)
+    setCustomLightType(light.type)
+    if (light.efficiency) {
+      setCustomEfficiency(light.efficiency)
+    }
+    
+    // 저장된 조명을 즉시 선택된 조명 목록에 추가
+    setSelectedLights(prev => [...prev, {
+      id: Date.now().toString(),
+      name: light.name,
+      lumen: light.lumen,
+      watt: light.watt,
+      colorTemp: '커스텀',
+      size: '커스텀',
+      quantity: 1,
+      category: light.type === '기타' ? '루멘 기준 커스텀' : light.type,
+      type: '커스텀'
+    }])
+    
+    setShowSavedLights(false)
+  }, [])
+
+  // 저장된 커스텀 조명 삭제 함수
+  const deleteSavedLight = useCallback((id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    const updatedLights = savedCustomLights.filter(light => light.id !== id)
+    setSavedCustomLights(updatedLights)
+    localStorage.setItem('customLights', JSON.stringify(updatedLights))
+  }, [savedCustomLights])
 
   const addCustomLight = useCallback((e: React.MouseEvent)=>{
     e.preventDefault()
@@ -705,15 +784,69 @@ function App() {
             </div>
           )}
 
-          <button type="button" 
-                  onClick={addCustomLight}
-                  disabled={!customLightName||customLightLumen<=0||customLightWatt<=0}
-                  className="w-full py-2 rounded-lg bg-purple-600 text-white disabled:bg-gray-400">
-            {inputMode === 'lumen' 
-              ? '루멘 기준 커스텀 조명 추가' 
-              : '와트기반 자동계산(추정치) 조명 추가'}
-          </button>
+          <div className="flex gap-2">
+            <button type="button" 
+                    onClick={addCustomLight}
+                    disabled={!customLightName||customLightLumen<=0||customLightWatt<=0}
+                    className="flex-1 py-2 rounded-lg bg-purple-600 text-white disabled:bg-gray-400">
+              {inputMode === 'lumen' 
+                ? '루멘 기준 조명 추가' 
+                : '와트기반 조명 추가'}
+            </button>
+            
+            <button type="button" 
+                    onClick={saveCustomLight}
+                    disabled={!customLightName||customLightLumen<=0||customLightWatt<=0}
+                    className="flex-1 py-2 rounded-lg bg-green-600 text-white disabled:bg-gray-400">
+              조명 정보 저장
+            </button>
+          </div>
         </section>
+
+        {/* ▣ 저장된 조명 불러오기 ▣ */}
+        {savedCustomLights.length > 0 && (
+          <section className="bg-white p-6 rounded-xl shadow border space-y-6">
+            <h2 className="text-xl font-semibold text-center">저장된 조명 불러오기</h2>
+            
+            <div className="flex justify-center mb-4">
+              <button
+                type="button"
+                onClick={() => setShowSavedLights(!showSavedLights)}
+                className="px-4 py-2 rounded-lg bg-green-600 text-white transition hover:bg-green-700"
+              >
+                저장된 조명 {showSavedLights ? '닫기' : '목록 보기'} ({savedCustomLights.length})
+              </button>
+            </div>
+            
+            {showSavedLights && (
+              <div className="border rounded-lg p-3 max-h-80 overflow-y-auto">
+                <p className="text-center text-sm font-medium mb-2">저장된 조명 목록</p>
+                <div className="space-y-2">
+                  {savedCustomLights.map((light) => (
+                    <div 
+                      key={light.id}
+                      onClick={() => loadCustomLight(light)}
+                      className="flex justify-between items-center p-2 border rounded cursor-pointer hover:bg-gray-50"
+                    >
+                      <div>
+                        <p className="font-medium">{light.name}</p>
+                        <p className="text-xs text-gray-500">{light.lumen} lm | {light.watt} W | {light.type}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={(e) => deleteSavedLight(light.id, e)}
+                          className="px-2 py-1 text-xs text-red-600 border border-red-200 rounded hover:bg-red-50"
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* ▣ 조도 결과 ▣ */}
         <section className="bg-white p-6 rounded-xl shadow border space-y-6">
