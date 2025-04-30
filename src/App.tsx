@@ -10,6 +10,7 @@ interface Light {
   colorTemp: string
   size: string
   quantity: number
+  category: string
 }
 interface SpaceType { name: string; lux: number }
 interface LightData {
@@ -59,7 +60,7 @@ function App() {
   const firstRow  = ['술집','카페','밥집','주방']
   const secondRow = ['침실','거실','다이닝룸']
 
-  const lightCategories = ['다운라이트','라인조명','레일조명','벌브전구','평판등']
+  const lightCategories = ['다운라이트','라인조명','레일조명','벌브전구','평판등','간접조명']
 
   const lightData:LightData[] = [
     { name:'COB실린더 3인치', lumenByColorTemp:{'3000K':510,'4000K':510,'5000K':510}, watt:6, colorTemps:['3000K','4000K','5000K'], size:'3인치', category:'다운라이트' },
@@ -80,6 +81,8 @@ function App() {
     { name:'오스람 평판등(1285*320)', lumenByColorTemp:{'4000K':4500,'5700K':4500}, watt:50, colorTemps:['4000K','5700K'], size:'1285x320mm', category:'평판등' },
     { name:'장수LED 십자등', lumenByColorTemp:{'6500K':4200}, watt:55, colorTemps:['6500K'], size:'L580*D60', category:'평판등' },
     { name:'장수LED 스키등', lumenByColorTemp:{'2700K':4500,'6500K':4500}, watt:40, colorTemps:['2700K','6500K'], size:'800*60', category:'평판등' },
+    { name:'간접박스 속 T5(70%조정)', lumenByColorTemp:{'3000K':320,'4000K':320,'6500K':320}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'간접조명' },
+    { name:'동성LED 슬림 라인바', lumenByColorTemp:{'3000K':92,'4000K':92,'6500K':92}, watt:1.2, colorTemps:['3000K','4000K','6500K'], size:'100mm', category:'간접조명' },
   ]
 
   /* ---------- UF 계산 ---------- */
@@ -98,10 +101,15 @@ function App() {
   /* ---------- 조도 계산 ---------- */
   const calcLux = useCallback((lights:Light[])=>{
     const areaNum = Number(area)||1
-    const lum     = lights.reduce((s,l)=>s+l.lumen*l.quantity,0)
-    const w       = lights.reduce((s,l)=>s+l.watt  *l.quantity,0)
-    setTotalLumen(lum); setTotalWatt(w)
-    setExpectedLux(Math.round(lum*UF*MF/areaNum))
+    const lum = lights.reduce((sum, l) => {
+      const isIndirect = l.category === '간접조명'
+      const adjustedLumen = isIndirect ? l.lumen * 0.7 : l.lumen
+      return sum + adjustedLumen * l.quantity
+    }, 0)
+    const w = lights.reduce((sum, l) => sum + l.watt * l.quantity, 0)
+    setTotalLumen(Math.round(lum))
+    setTotalWatt(w)
+    setExpectedLux(Math.round(lum * UF * MF / areaNum))
   },[area,UF])
   useEffect(()=>calcLux(selectedLights),[selectedLights,calcLux])
 
@@ -120,7 +128,7 @@ function App() {
       if(idx>=0){
         const a=[...prev]; a[idx]={...a[idx],quantity:a[idx].quantity+qty}; return a
       }
-      return [...prev,{id,name:light.name,lumen,watt:light.watt,colorTemp:ct,size:light.size,quantity:qty}]
+      return [...prev,{id,name:light.name,lumen,watt:light.watt,colorTemp:ct,size:light.size,quantity:qty,category:light.category}]
     })
     setSelectedLightColorTemps(p=>{const n={...p}; delete n[light.name]; return n})
   },[])
@@ -129,7 +137,7 @@ function App() {
     e.preventDefault()
     if(!customLightName||customLightLumen<=0||customLightWatt<=0) return
     setSelectedLights(p=>[...p,{id:Date.now().toString(),name:customLightName,lumen:customLightLumen,
-                               watt:customLightWatt,colorTemp:'커스텀',size:'커스텀',quantity:1}])
+                               watt:customLightWatt,colorTemp:'커스텀',size:'커스텀',quantity:1,category:'다운라이트'}])
     setCustomLightName(''); setCustomLightLumen(0); setCustomLightWatt(0)
   },[customLightName,customLightLumen,customLightWatt])
 
