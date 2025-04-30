@@ -73,44 +73,44 @@ function App() {
     { name:'COB실린더 3인치', lumenByColorTemp:{'3000K':510,'4000K':510,'5000K':510}, watt:6, colorTemps:['3000K','4000K','5000K'], size:'3인치', category:'다운라이트', thumbnail:'/images/lights/cob_3inch.png' },
     { name:'오스람LED 2인치(ledvance)', lumenByColorTemp:{'3000K':560,'4000K':560,'5700K':560}, watt:8, colorTemps:['3000K','4000K','5700K'], size:'2인치', category:'다운라이트', thumbnail:'/images/lights/osram_2inch.png' },
     { name:'오스람LED 3인치', lumenByColorTemp:{'3000K':540,'4000K':580,'6500K':580}, watt:8, colorTemps:['3000K','4000K','6500K'], size:'3인치', category:'다운라이트', thumbnail:'/images/lights/osram_3inch.png' },
-    { name:'오스람LED 6인치(ledvance)', lumenByColorTemp:{'3000K':1300,'4000K':1400,'5700K':1400}, watt:20, colorTemps:['3000K','4000K','5700K'], size:'6인치', category:'다운라이트' },
-    { name:'오스람 T5(ledvance)', lumenByColorTemp:{'3000K':320,'4000K':320,'6500K':320}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명' },
-    { name:'진성T8(T7, T라인)', lumenByColorTemp:{'3000K':560,'4000K':560,'6500K':560}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명' },
-    { name:'예도LED T33', lumenByColorTemp:{'3000K':525,'4000K':525,'6500K':525}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명' },
-    { name:'T70광폭', lumenByColorTemp:{'3000K':2700,'4000K':2700,'6500K':2700}, watt:30, colorTemps:['3000K','4000K','6500K'], size:'600mm', category:'라인조명' },
-    { name:'LED PAR30 (1등급 집중형)', lumenByColorTemp:{'3000K':1590,'4000K':1590,'6500K':1590}, watt:15, colorTemps:['3000K','4000K','6500K'], size:'PAR30', category:'레일조명' },
-    { name:'LED PAR30 (일반집중,확산형)', lumenByColorTemp:{'3000K':1200,'4000K':1200,'6500K':1200}, watt:15, colorTemps:['3000K','4000K','6500K'], size:'PAR30', category:'레일조명' },
-    { name:'COB 20W 원통 레일등', lumenByColorTemp:{'3000K':1300,'4000K':1300,'5700K':1300}, watt:20, colorTemps:['3000K','4000K','5700K'], size:'원통형', category:'레일조명' },
-    { name:'비츠온 LED 에디슨전구 벌브형(E26)', lumenByColorTemp:{'2700K':680}, watt:8, colorTemps:['2700K'], size:'E26', category:'벌브전구' },
-    { name:'비츠온 LED 벌브전구(E26)', lumenByColorTemp:{'3000K':910,'4000K':1000,'6500K':1000}, watt:12, colorTemps:['3000K','4000K','6500K'], size:'E26', category:'벌브전구' },
-    { name:'비츠온 LED T벌브전구(E26)', lumenByColorTemp:{'3000K':2520,'6500K':2520}, watt:30, colorTemps:['3000K','6500K'], size:'E26', category:'벌브전구' },
-    { name:'오스람 평판등(640*640)', lumenByColorTemp:{'4000K':4500,'5700K':4500}, watt:50, colorTemps:['4000K','5700K'], size:'640x640mm', category:'평판등' },
-    { name:'오스람 평판등(1285*320)', lumenByColorTemp:{'4000K':4500,'5700K':4500}, watt:50, colorTemps:['4000K','5700K'], size:'1285x320mm', category:'평판등' },
-    { name:'장수LED 십자등', lumenByColorTemp:{'6500K':4200}, watt:55, colorTemps:['6500K'], size:'L580*D60', category:'평판등' },
-    { name:'장수LED 스키등', lumenByColorTemp:{'2700K':4500,'6500K':4500}, watt:40, colorTemps:['2700K','6500K'], size:'800*60', category:'평판등' },
-    { name:'간접박스 속 오스람 T5', lumenByColorTemp:{'3000K':320,'4000K':320,'6500K':320}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'간접조명' },
-    { name:'간접박스 속 동성LED 슬림 라인바', lumenByColorTemp:{'3000K':92,'4000K':92,'6500K':92}, watt:1.2, colorTemps:['3000K','4000K','6500K'], size:'100mm', category:'간접조명' },
+    { name:'오스람LED 6인치(ledvance)', lumenByColorTemp:{'3000K':1300,'4000K':1400,'5700K':1400}, watt:20, colorTemps:['3000K','4000K','5700K'], size:'6인치', category:'다운라이트', thumbnail:'/images/lights/osram_6inch.png' },
+    { name:'오스람 T5(ledvance)', lumenByColorTemp:{'3000K':320,'4000K':320,'6500K':320}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명', thumbnail:'/images/lights/osram_t5.png' },
+    { name:'진성T8(T7, T라인)', lumenByColorTemp:{'3000K':560,'4000K':560,'6500K':560}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명', thumbnail:'/images/lights/jinsung_t8.png' },
+    { name:'예도LED T33', lumenByColorTemp:{'3000K':525,'4000K':525,'6500K':525}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명', thumbnail:'/images/lights/yedo_t33.png' },
+    { name:'T70광폭', lumenByColorTemp:{'3000K':2700,'4000K':2700,'6500K':2700}, watt:30, colorTemps:['3000K','4000K','6500K'], size:'600mm', category:'라인조명', thumbnail:'/images/lights/t70.png' },
+    { name:'LED PAR30 (1등급 집중형)', lumenByColorTemp:{'3000K':1590,'4000K':1590,'6500K':1590}, watt:15, colorTemps:['3000K','4000K','6500K'], size:'PAR30', category:'레일조명', thumbnail:'/images/lights/led_par30_1.png' },
+    { name:'LED PAR30 (일반집중,확산형)', lumenByColorTemp:{'3000K':1200,'4000K':1200,'6500K':1200}, watt:15, colorTemps:['3000K','4000K','6500K'], size:'PAR30', category:'레일조명', thumbnail:'/images/lights/led_par30_2.png' },
+    { name:'COB 20W 원통 레일등', lumenByColorTemp:{'3000K':1300,'4000K':1300,'5700K':1300}, watt:20, colorTemps:['3000K','4000K','5700K'], size:'원통형', category:'레일조명', thumbnail:'/images/lights/cob_rail_20w.png' },
+    { name:'비츠온 LED 에디슨전구 벌브형(E26)', lumenByColorTemp:{'2700K':680}, watt:8, colorTemps:['2700K'], size:'E26', category:'벌브전구', thumbnail:'/images/lights/bitzeon_edison.png' },
+    { name:'비츠온 LED 벌브전구(E26)', lumenByColorTemp:{'3000K':910,'4000K':1000,'6500K':1000}, watt:12, colorTemps:['3000K','4000K','6500K'], size:'E26', category:'벌브전구', thumbnail:'/images/lights/bitzeon_bulb.png' },
+    { name:'비츠온 LED T벌브전구(E26)', lumenByColorTemp:{'3000K':2520,'6500K':2520}, watt:30, colorTemps:['3000K','6500K'], size:'E26', category:'벌브전구', thumbnail:'/images/lights/bitzeon_tbulb.png' },
+    { name:'오스람 평판등(640*640)', lumenByColorTemp:{'4000K':4500,'5700K':4500}, watt:50, colorTemps:['4000K','5700K'], size:'640x640mm', category:'평판등', thumbnail:'/images/lights/osram_panel_640.png' },
+    { name:'오스람 평판등(1285*320)', lumenByColorTemp:{'4000K':4500,'5700K':4500}, watt:50, colorTemps:['4000K','5700K'], size:'1285x320mm', category:'평판등', thumbnail:'/images/lights/osram_panel_1285.png' },
+    { name:'장수LED 십자등', lumenByColorTemp:{'6500K':4200}, watt:55, colorTemps:['6500K'], size:'L580*D60', category:'평판등', thumbnail:'/images/lights/jangsu_cross.png' },
+    { name:'장수LED 스키등', lumenByColorTemp:{'2700K':4500,'6500K':4500}, watt:40, colorTemps:['2700K','6500K'], size:'800*60', category:'평판등', thumbnail:'/images/lights/jangsu_ski.png' },
+    { name:'간접박스 속 오스람 T5', lumenByColorTemp:{'3000K':320,'4000K':320,'6500K':320}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'간접조명', thumbnail:'/images/lights/indirect_osram_t5.png' },
+    { name:'간접박스 속 동성LED 슬림 라인바', lumenByColorTemp:{'3000K':92,'4000K':92,'6500K':92}, watt:1.2, colorTemps:['3000K','4000K','6500K'], size:'100mm', category:'간접조명', thumbnail:'/images/lights/indirect_dongsung.png' },
     // T20 마그네틱 조명 추가
     // 라인 확산형
     { name:'라인 확산형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W300×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_12w.png' },
     { name:'라인 확산형 등기구 24W', lumenByColorTemp:{'3000K':1800,'4000K':1800}, watt:24, colorTemps:['3000K','4000K'], size:'W600×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_24w.png' },
-    { name:'라인 확산형 등기구 30W', lumenByColorTemp:{'3000K':2250,'4000K':2250}, watt:30, colorTemps:['3000K','4000K'], size:'W900×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형' },
-    { name:'라인 확산형 등기구 40W', lumenByColorTemp:{'3000K':3000,'4000K':3000}, watt:40, colorTemps:['3000K','4000K'], size:'W1200×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형' },
+    { name:'라인 확산형 등기구 30W', lumenByColorTemp:{'3000K':2250,'4000K':2250}, watt:30, colorTemps:['3000K','4000K'], size:'W900×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_30w.png' },
+    { name:'라인 확산형 등기구 40W', lumenByColorTemp:{'3000K':3000,'4000K':3000}, watt:40, colorTemps:['3000K','4000K'], size:'W1200×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_40w.png' },
     // 스타 집중형
     { name:'스타 집중형 등기구 6W', lumenByColorTemp:{'3000K':450,'4000K':450}, watt:6, colorTemps:['3000K','4000K'], size:'W110×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_6w.png' },
     { name:'스타 집중형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W220×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_12w.png' },
-    { name:'스타 집중형 등기구 18W', lumenByColorTemp:{'3000K':1350,'4000K':1350}, watt:18, colorTemps:['3000K','4000K'], size:'W330×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형' },
-    { name:'스타 집중형 등기구 24W', lumenByColorTemp:{'3000K':1800,'4000K':1800}, watt:24, colorTemps:['3000K','4000K'], size:'W440×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형' },
-    { name:'스타 집중형 등기구 30W', lumenByColorTemp:{'3000K':2250,'4000K':2250}, watt:30, colorTemps:['3000K','4000K'], size:'W550×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형' },
-    { name:'스타 집중형 등기구 36W', lumenByColorTemp:{'3000K':2700,'4000K':2700}, watt:36, colorTemps:['3000K','4000K'], size:'W660×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형' },
+    { name:'스타 집중형 등기구 18W', lumenByColorTemp:{'3000K':1350,'4000K':1350}, watt:18, colorTemps:['3000K','4000K'], size:'W330×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_18w.png' },
+    { name:'스타 집중형 등기구 24W', lumenByColorTemp:{'3000K':1800,'4000K':1800}, watt:24, colorTemps:['3000K','4000K'], size:'W440×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_24w.png' },
+    { name:'스타 집중형 등기구 30W', lumenByColorTemp:{'3000K':2250,'4000K':2250}, watt:30, colorTemps:['3000K','4000K'], size:'W550×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_30w.png' },
+    { name:'스타 집중형 등기구 36W', lumenByColorTemp:{'3000K':2700,'4000K':2700}, watt:36, colorTemps:['3000K','4000K'], size:'W660×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_36w.png' },
     // 스타 폴더 집중형
     { name:'스타 폴더 집중형 등기구 6W', lumenByColorTemp:{'3000K':450,'4000K':450}, watt:6, colorTemps:['3000K','4000K'], size:'W112×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_6w.png' },
     { name:'스타 폴더 집중형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W225×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_12w.png' },
     { name:'스타 폴더 집중형 등기구 18W', lumenByColorTemp:{'3000K':1350,'4000K':1350}, watt:18, colorTemps:['3000K','4000K'], size:'W325×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_18w.png' },
     // 스포트 집중형
-    { name:'스포트 집중형 등기구 7W', lumenByColorTemp:{'3000K':525,'4000K':525}, watt:7, colorTemps:['3000K','4000K'], size:'W35×H80mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/sopt_7w.png' },
-    { name:'스포트 집중형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W42×H100mm', category:'T20 마그네틱', type:'스포트 집중형' },
-    { name:'스포트 집중형 등기구 20W', lumenByColorTemp:{'3000K':1500,'4000K':1500}, watt:20, colorTemps:['3000K','4000K'], size:'W48×H105mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/sopt_20w.png' },
+    { name:'스포트 집중형 등기구 7W', lumenByColorTemp:{'3000K':525,'4000K':525}, watt:7, colorTemps:['3000K','4000K'], size:'W35×H80mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/spot_7w.png' },
+    { name:'스포트 집중형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W42×H100mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/spot_12w.png' },
+    { name:'스포트 집중형 등기구 20W', lumenByColorTemp:{'3000K':1500,'4000K':1500}, watt:20, colorTemps:['3000K','4000K'], size:'W48×H105mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/spot_20w.png' },
     // ZOOM 스포트 집중형
     { name:'ZOOM 스포트 집중형 등기구 10W', lumenByColorTemp:{'3000K':750,'4000K':750}, watt:10, colorTemps:['3000K','4000K'], size:'W65×H128mm', category:'T20 마그네틱', type:'ZOOM 스포트 집중형', thumbnail:'/images/lights/zoom_10w.png' },
     { name:'ZOOM 스포트 집중형 등기구 20W', lumenByColorTemp:{'3000K':1500,'4000K':1500}, watt:20, colorTemps:['3000K','4000K'], size:'W85×H145mm', category:'T20 마그네틱', type:'ZOOM 스포트 집중형', thumbnail:'/images/lights/zoom_20w.png' },
@@ -203,8 +203,8 @@ function App() {
   // T20 마그네틱 타입 관련 로직
   const t20Types = ['라인 확산형', '스타 집중형', '스타 폴더 집중형', '스포트 집중형', 'ZOOM 스포트 집중형']
   // 선택된 카테고리가 T20 마그네틱이고 타입이 선택된 경우 해당 타입으로 필터링
-  const filteredByT20Type = selectedCategory === 'T20 마그네틱' && selectedT20Type
-    ? filteredLights.filter(l => l.type === selectedT20Type)
+  const filteredByT20Type = selectedCategory === 'T20 마그네틱' 
+    ? (selectedT20Type ? filteredLights.filter(l => l.type === selectedT20Type) : [])
     : filteredLights
     
   // 카테고리 변경 시 T20 타입 초기화
