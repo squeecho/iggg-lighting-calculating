@@ -11,6 +11,8 @@ interface Light {
   size: string
   quantity: number
   category: string
+  type?: string
+  thumbnail?: string
 }
 interface SpaceType { name: string; lux: number }
 interface LightData {
@@ -20,6 +22,8 @@ interface LightData {
   colorTemps: string[]
   size: string
   category: string
+  type?: string
+  thumbnail?: string
 }
 
 /* ───────── 컴포넌트 ───────── */
@@ -43,6 +47,9 @@ function App() {
   const [selectedCategory,setSelectedCategory] = useState('다운라이트')
   const [selectedLightColorTemps,setSelectedLightColorTemps] = useState<Record<string,string>>({})
   const [tempQuantities,setTempQuantities] = useState<Record<string,number|string>>({})
+  
+  // T20 마그네틱 타입 선택 상태
+  const [selectedT20Type, setSelectedT20Type] = useState<string>('')
 
   const MF = 0.8
   const [UF,setUF] = useState(0.7)
@@ -60,12 +67,12 @@ function App() {
   const firstRow  = ['술집','카페','밥집','주방']
   const secondRow = ['침실','거실','다이닝룸']
 
-  const lightCategories = ['다운라이트','라인조명','레일조명','벌브전구','평판등','간접조명']
+  const lightCategories = ['다운라이트','라인조명','레일조명','벌브전구','평판등','간접조명','T20 마그네틱']
 
   const lightData:LightData[] = [
-    { name:'COB실린더 3인치', lumenByColorTemp:{'3000K':510,'4000K':510,'5000K':510}, watt:6, colorTemps:['3000K','4000K','5000K'], size:'3인치', category:'다운라이트' },
-    { name:'오스람LED 2인치(ledvance)', lumenByColorTemp:{'3000K':560,'4000K':560,'5700K':560}, watt:8, colorTemps:['3000K','4000K','5700K'], size:'2인치', category:'다운라이트' },
-    { name:'오스람LED 3인치', lumenByColorTemp:{'3000K':540,'4000K':580,'6500K':580}, watt:8, colorTemps:['3000K','4000K','6500K'], size:'3인치', category:'다운라이트' },
+    { name:'COB실린더 3인치', lumenByColorTemp:{'3000K':510,'4000K':510,'5000K':510}, watt:6, colorTemps:['3000K','4000K','5000K'], size:'3인치', category:'다운라이트', thumbnail:'/images/lights/cob_3inch.png' },
+    { name:'오스람LED 2인치(ledvance)', lumenByColorTemp:{'3000K':560,'4000K':560,'5700K':560}, watt:8, colorTemps:['3000K','4000K','5700K'], size:'2인치', category:'다운라이트', thumbnail:'/images/lights/osram_2inch.png' },
+    { name:'오스람LED 3인치', lumenByColorTemp:{'3000K':540,'4000K':580,'6500K':580}, watt:8, colorTemps:['3000K','4000K','6500K'], size:'3인치', category:'다운라이트', thumbnail:'/images/lights/osram_3inch.png' },
     { name:'오스람LED 6인치(ledvance)', lumenByColorTemp:{'3000K':1300,'4000K':1400,'5700K':1400}, watt:20, colorTemps:['3000K','4000K','5700K'], size:'6인치', category:'다운라이트' },
     { name:'오스람 T5(ledvance)', lumenByColorTemp:{'3000K':320,'4000K':320,'6500K':320}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명' },
     { name:'진성T8(T7, T라인)', lumenByColorTemp:{'3000K':560,'4000K':560,'6500K':560}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'라인조명' },
@@ -83,6 +90,30 @@ function App() {
     { name:'장수LED 스키등', lumenByColorTemp:{'2700K':4500,'6500K':4500}, watt:40, colorTemps:['2700K','6500K'], size:'800*60', category:'평판등' },
     { name:'간접박스 속 오스람 T5', lumenByColorTemp:{'3000K':320,'4000K':320,'6500K':320}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'간접조명' },
     { name:'간접박스 속 동성LED 슬림 라인바', lumenByColorTemp:{'3000K':92,'4000K':92,'6500K':92}, watt:1.2, colorTemps:['3000K','4000K','6500K'], size:'100mm', category:'간접조명' },
+    // T20 마그네틱 조명 추가
+    // 라인 확산형
+    { name:'라인 확산형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W300×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_12w.png' },
+    { name:'라인 확산형 등기구 24W', lumenByColorTemp:{'3000K':1800,'4000K':1800}, watt:24, colorTemps:['3000K','4000K'], size:'W600×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형', thumbnail:'/images/lights/line_24w.png' },
+    { name:'라인 확산형 등기구 30W', lumenByColorTemp:{'3000K':2250,'4000K':2250}, watt:30, colorTemps:['3000K','4000K'], size:'W900×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형' },
+    { name:'라인 확산형 등기구 40W', lumenByColorTemp:{'3000K':3000,'4000K':3000}, watt:40, colorTemps:['3000K','4000K'], size:'W1200×D22×H25mm', category:'T20 마그네틱', type:'라인 확산형' },
+    // 스타 집중형
+    { name:'스타 집중형 등기구 6W', lumenByColorTemp:{'3000K':450,'4000K':450}, watt:6, colorTemps:['3000K','4000K'], size:'W110×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_6w.png' },
+    { name:'스타 집중형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W220×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형', thumbnail:'/images/lights/star_12w.png' },
+    { name:'스타 집중형 등기구 18W', lumenByColorTemp:{'3000K':1350,'4000K':1350}, watt:18, colorTemps:['3000K','4000K'], size:'W330×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형' },
+    { name:'스타 집중형 등기구 24W', lumenByColorTemp:{'3000K':1800,'4000K':1800}, watt:24, colorTemps:['3000K','4000K'], size:'W440×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형' },
+    { name:'스타 집중형 등기구 30W', lumenByColorTemp:{'3000K':2250,'4000K':2250}, watt:30, colorTemps:['3000K','4000K'], size:'W550×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형' },
+    { name:'스타 집중형 등기구 36W', lumenByColorTemp:{'3000K':2700,'4000K':2700}, watt:36, colorTemps:['3000K','4000K'], size:'W660×D22×H25mm', category:'T20 마그네틱', type:'스타 집중형' },
+    // 스타 폴더 집중형
+    { name:'스타 폴더 집중형 등기구 6W', lumenByColorTemp:{'3000K':450,'4000K':450}, watt:6, colorTemps:['3000K','4000K'], size:'W112×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_6w.png' },
+    { name:'스타 폴더 집중형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W225×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_12w.png' },
+    { name:'스타 폴더 집중형 등기구 18W', lumenByColorTemp:{'3000K':1350,'4000K':1350}, watt:18, colorTemps:['3000K','4000K'], size:'W325×D22×H136mm', category:'T20 마그네틱', type:'스타 폴더 집중형', thumbnail:'/images/lights/folder_18w.png' },
+    // 스포트 집중형
+    { name:'스포트 집중형 등기구 7W', lumenByColorTemp:{'3000K':525,'4000K':525}, watt:7, colorTemps:['3000K','4000K'], size:'W35×H80mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/sopt_7w.png' },
+    { name:'스포트 집중형 등기구 12W', lumenByColorTemp:{'3000K':900,'4000K':900}, watt:12, colorTemps:['3000K','4000K'], size:'W42×H100mm', category:'T20 마그네틱', type:'스포트 집중형' },
+    { name:'스포트 집중형 등기구 20W', lumenByColorTemp:{'3000K':1500,'4000K':1500}, watt:20, colorTemps:['3000K','4000K'], size:'W48×H105mm', category:'T20 마그네틱', type:'스포트 집중형', thumbnail:'/images/lights/sopt_20w.png' },
+    // ZOOM 스포트 집중형
+    { name:'ZOOM 스포트 집중형 등기구 10W', lumenByColorTemp:{'3000K':750,'4000K':750}, watt:10, colorTemps:['3000K','4000K'], size:'W65×H128mm', category:'T20 마그네틱', type:'ZOOM 스포트 집중형', thumbnail:'/images/lights/zoom_10w.png' },
+    { name:'ZOOM 스포트 집중형 등기구 20W', lumenByColorTemp:{'3000K':1500,'4000K':1500}, watt:20, colorTemps:['3000K','4000K'], size:'W85×H145mm', category:'T20 마그네틱', type:'ZOOM 스포트 집중형', thumbnail:'/images/lights/zoom_20w.png' },
   ]
 
   /* ---------- UF 계산 ---------- */
@@ -128,7 +159,18 @@ function App() {
       if(idx>=0){
         const a=[...prev]; a[idx]={...a[idx],quantity:a[idx].quantity+qty}; return a
       }
-      return [...prev,{id,name:light.name,lumen,watt:light.watt,colorTemp:ct,size:light.size,quantity:qty,category:light.category}]
+      return [...prev,{
+        id,
+        name:light.name,
+        lumen,
+        watt:light.watt,
+        colorTemp:ct,
+        size:light.size,
+        quantity:qty,
+        category:light.category,
+        type:light.type,
+        thumbnail:light.thumbnail
+      }]
     })
     setSelectedLightColorTemps(p=>{const n={...p}; delete n[light.name]; return n})
   },[])
@@ -136,8 +178,17 @@ function App() {
   const addCustomLight = useCallback((e: React.MouseEvent)=>{
     e.preventDefault()
     if(!customLightName||customLightLumen<=0||customLightWatt<=0) return
-    setSelectedLights(p=>[...p,{id:Date.now().toString(),name:customLightName,lumen:customLightLumen,
-                               watt:customLightWatt,colorTemp:'커스텀',size:'커스텀',quantity:1,category:'다운라이트'}])
+    setSelectedLights(p=>[...p,{
+      id:Date.now().toString(),
+      name:customLightName,
+      lumen:customLightLumen,
+      watt:customLightWatt,
+      colorTemp:'커스텀',
+      size:'커스텀',
+      quantity:1,
+      category:'다운라이트',
+      type:'커스텀'
+    }])
     setCustomLightName(''); setCustomLightLumen(0); setCustomLightWatt(0)
   },[customLightName,customLightLumen,customLightWatt])
 
@@ -148,6 +199,28 @@ function App() {
   },[removeLight])
 
   const filteredLights = lightData.filter(l=>l.category===selectedCategory)
+  
+  // T20 마그네틱 타입 관련 로직
+  const t20Types = ['라인 확산형', '스타 집중형', '스타 폴더 집중형', '스포트 집중형', 'ZOOM 스포트 집중형']
+  // 선택된 카테고리가 T20 마그네틱이고 타입이 선택된 경우 해당 타입으로 필터링
+  const filteredByT20Type = selectedCategory === 'T20 마그네틱' && selectedT20Type
+    ? filteredLights.filter(l => l.type === selectedT20Type)
+    : filteredLights
+    
+  // 카테고리 변경 시 T20 타입 초기화
+  useEffect(() => {
+    setSelectedT20Type('')
+    setSelectedLightColorTemps({})
+    setTempQuantities({})
+  }, [selectedCategory])
+  
+  // T20 타입 변경 시 선택 초기화
+  useEffect(() => {
+    if (selectedCategory === 'T20 마그네틱') {
+      setSelectedLightColorTemps({})
+      setTempQuantities({})
+    }
+  }, [selectedT20Type])
 
   const ufText = (u:number)=>{
     if(u===0.75)return'2.2m 이하'
@@ -315,12 +388,48 @@ function App() {
               </button>
             ))}
           </div>
+          
+          {/* T20 마그네틱 타입 선택 UI */}
+          {selectedCategory === 'T20 마그네틱' && (
+            <div className="pt-2">
+              <p className="text-center font-medium mb-3">타입 선택</p>
+              <div className="flex flex-wrap gap-2 justify-center">
+                {t20Types.map(type => (
+                  <button 
+                    key={type} 
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedT20Type(type);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg text-sm transition
+                      ${selectedT20Type === type
+                        ? 'bg-blue-600 text-white ring-2 ring-blue-300'
+                        : 'bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50'}`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="space-y-6">
-            {filteredLights.map(light=>(
+            {filteredByT20Type.map(light=>(
               <div key={light.name} className="border rounded-xl p-4 space-y-4">
-                <p className="text-center font-medium">{light.name}</p>
-                <p className="text-center text-sm text-gray-500">{light.watt}W / {light.size}</p>
+                <div className="flex flex-col items-center">
+                  <div className="w-24 h-24 mb-2 bg-gray-100 flex items-center justify-center rounded overflow-hidden">
+                    {light.thumbnail ? (
+                      <img src={light.thumbnail} alt={light.name} className="w-full h-auto object-contain" />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
+                        이미지 없음
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-center font-medium">{light.name}</p>
+                  <p className="text-center text-sm text-gray-500">{light.watt}W / {light.size}</p>
+                </div>
 
                 <div className="flex flex-wrap gap-2 justify-center">
                   {light.colorTemps.map(ct=>{
