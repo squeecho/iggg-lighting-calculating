@@ -39,6 +39,8 @@ function App() {
   const [customLightName ,setCustomLightName ] = useState('')
   const [customLightLumen,setCustomLightLumen] = useState(0)
   const [customLightWatt ,setCustomLightWatt ] = useState(0)
+  const [inputMode, setInputMode] = useState<'lumen' | 'watt'>('lumen')
+  const [customLightType, setCustomLightType] = useState('매립조명')
 
   const [totalLumen,setTotalLumen] = useState(0)
   const [totalWatt ,setTotalWatt ] = useState(0)
@@ -186,11 +188,11 @@ function App() {
       colorTemp:'커스텀',
       size:'커스텀',
       quantity:1,
-      category:'다운라이트',
+      category:inputMode === 'watt' ? customLightType : '루멘 기준 커스텀',
       type:'커스텀'
     }])
     setCustomLightName(''); setCustomLightLumen(0); setCustomLightWatt(0)
-  },[customLightName,customLightLumen,customLightWatt])
+  },[customLightName, customLightLumen, customLightWatt, inputMode, customLightType])
 
   const removeLight = useCallback((id:string)=>setSelectedLights(p=>p.filter(l=>l.id!==id)),[])
   const updateQty   = useCallback((id:string,qty:number)=>{
@@ -238,6 +240,18 @@ function App() {
       setTempQuantities(p=>({...p,[name]:1}))
     }
   }
+
+  // 조명 종류별 광효율
+  const getLumensPerWatt = useCallback((lightType: string) => {
+    switch(lightType) {
+      case '매립조명': return 90;
+      case '직부조명': return 90;
+      case '간접조명': return 100;
+      case '레일조명': return 85;
+      case '전구형 조명': return 100;
+      default: return 90;
+    }
+  }, []);
 
   /* ──────────────────────────── 렌더 ──────────────────────────── */
   return (
@@ -513,24 +527,99 @@ function App() {
         {/* ▣ 커스텀 조명 ▣ */}
         <section className="bg-white p-6 rounded-xl shadow border space-y-6">
           <h2 className="text-xl font-semibold text-center">커스텀 조명</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <input placeholder="이름" value={customLightName}
-                   onChange={e=>setCustomLightName(e.target.value)}
-                   className="border px-3 py-2 rounded"/>
-            <input placeholder="루멘" type="number" min={1} value={customLightLumen||''}
-                   onChange={e=>setCustomLightLumen(+e.target.value)}
-                   className="border px-3 py-2 rounded"/>
-            <input placeholder="와트" type="number" min={1} value={customLightWatt||''}
-                   onChange={e=>setCustomLightWatt(+e.target.value)}
-                   className="border px-3 py-2 rounded"/>
+          
+          {/* 입력 모드 탭 */}
+          <div className="flex justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => setInputMode('lumen')}
+              className={`px-4 py-2 rounded-lg transition 
+                ${inputMode === 'lumen' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-white text-gray-700 border'}`}
+            >
+              루멘 입력
+            </button>
+            <button
+              type="button"
+              onClick={() => setInputMode('watt')}
+              className={`px-4 py-2 rounded-lg transition 
+                ${inputMode === 'watt' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-white text-gray-700 border'}`}
+            >
+              와트기반 자동계산(추정치)
+            </button>
           </div>
+
+          {inputMode === 'lumen' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <input placeholder="이름" value={customLightName}
+                    onChange={e=>setCustomLightName(e.target.value)}
+                    className="border px-3 py-2 rounded"/>
+              <input placeholder="루멘" type="number" min={1} value={customLightLumen||''}
+                    onChange={e=>{
+                      const lumen = +e.target.value;
+                      setCustomLightLumen(lumen);
+                      // 루멘 입력 시 와트 자동 계산 (효율 90lm/W 기준)
+                      setCustomLightWatt(lumen > 0 ? Math.round((lumen / 90) * 10) / 10 : 0);
+                    }}
+                    className="border px-3 py-2 rounded"/>
+              {customLightLumen > 0 && (
+                <div className="text-gray-500 text-sm md:col-span-2">
+                  <p>자동 계산된 와트: {customLightWatt} W (효율 90lm/W 기준)</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-3">
+              <select
+                value={customLightType}
+                onChange={e => setCustomLightType(e.target.value)}
+                className="border px-3 py-2 rounded"
+              >
+                <option value="매립조명">매립조명 (다운라이트, 평판등, 슬림매입등)</option>
+                <option value="직부조명">직부조명 (COB 원통등, 노출형 실린더 등)</option>
+                <option value="간접조명">간접조명 (T5, 몰딩 안쪽 라인바 등)</option>
+                <option value="레일조명">레일조명 (스포트라이트, 집어등, 줌형 등)</option>
+                <option value="전구형 조명">전구형 조명 (E26 벌브, 팬던트, 샹들리에 등)</option>
+              </select>
+              <input 
+                placeholder="이름" 
+                value={customLightName}
+                onChange={e => setCustomLightName(e.target.value)}
+                className="border px-3 py-2 rounded"
+              />
+              <input 
+                placeholder="와트" 
+                type="number" 
+                min={1} 
+                value={customLightWatt||''}
+                onChange={e => {
+                  const watt = +e.target.value;
+                  setCustomLightWatt(watt);
+                  
+                  // 와트 기반 루멘 자동 계산
+                  const lumensPerWatt = getLumensPerWatt(customLightType);
+                  setCustomLightLumen(watt * lumensPerWatt);
+                }}
+                className="border px-3 py-2 rounded"
+              />
+              <div className="text-gray-500 text-sm">
+                {customLightWatt > 0 && (
+                  <p>자동 계산된 루멘: {customLightLumen} lm (기준 광효율: {getLumensPerWatt(customLightType)} lm/W)</p>
+                )}
+              </div>
+            </div>
+          )}
 
           <button type="button" 
                   onClick={addCustomLight}
                   disabled={!customLightName||customLightLumen<=0||customLightWatt<=0}
                   className="w-full py-2 rounded-lg bg-purple-600 text-white disabled:bg-gray-400">
-            커스텀 조명 추가
+            {inputMode === 'lumen' 
+              ? '루멘 기준 커스텀 조명 추가' 
+              : '와트기반 자동계산(추정치) 조명 추가'}
           </button>
         </section>
 
