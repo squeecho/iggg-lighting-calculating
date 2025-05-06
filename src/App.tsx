@@ -25,6 +25,18 @@ interface SavedCustomLight {
   efficiency?: number
 }
 
+// 조도 결과 저장을 위한 인터페이스
+interface SavedResult {
+  id: string
+  area: string
+  height: string
+  desiredLux: number
+  expectedLux: number
+  totalLumen: number
+  totalWatt: number
+  lights: Light[]
+}
+
 interface SpaceType { name: string; lux: number }
 interface LightData {
   name: string
@@ -65,6 +77,10 @@ function App() {
   
   // T20 마그네틱 타입 선택 상태
   const [selectedT20Type, setSelectedT20Type] = useState<string>('')
+
+  // 저장된 조도 결과 상태
+  const [savedResults, setSavedResults] = useState<SavedResult[]>([])
+  const [showSavedResults, setShowSavedResults] = useState<boolean>(false)
 
   const MF = 0.8
   const [UF,setUF] = useState(0.7)
@@ -107,6 +123,7 @@ function App() {
     { name:'오스람 평판등(1285*320)', lumenByColorTemp:{'4000K':4500,'5700K':4500}, watt:50, colorTemps:['4000K','5700K'], size:'1285x320mm', category:'평판등', thumbnail:'/images/lights/osram_panel_1285.png' },
     { name:'장수LED 십자등', lumenByColorTemp:{'6500K':4200}, watt:55, colorTemps:['6500K'], size:'L580*D60', category:'평판등', thumbnail:'/images/lights/jangsu_cross.png' },
     { name:'장수LED 스키등', lumenByColorTemp:{'2700K':4500,'6500K':4500}, watt:40, colorTemps:['2700K','6500K'], size:'800*60', category:'평판등', thumbnail:'/images/lights/jangsu_ski.png' },
+    { name:'비츠온 주차장등', lumenByColorTemp:{'6500K':7200}, watt:80, colorTemps:['6500K'], size:'1200mm', category:'평판등', thumbnail:'/images/lights/bitzeon_parking.png' },
     { name:'간접박스 속 오스람 T5', lumenByColorTemp:{'3000K':320,'4000K':320,'6500K':320}, watt:5, colorTemps:['3000K','4000K','6500K'], size:'300mm', category:'간접조명', thumbnail:'/images/lights/indirect_osram_t5.png' },
     { name:'간접박스 속 동성LED 슬림 라인바', lumenByColorTemp:{'3000K':92,'4000K':92,'6500K':92}, watt:1.2, colorTemps:['3000K','4000K','6500K'], size:'100mm', category:'간접조명', thumbnail:'/images/lights/indirect_dongsung.png' },
     // T20 마그네틱 조명 추가
@@ -206,6 +223,18 @@ function App() {
     }
   }, [])
 
+  // 앱 시작 시 저장된 조도 결과 로드
+  useEffect(() => {
+    const savedResultsData = localStorage.getItem('savedResults')
+    if (savedResultsData) {
+      try {
+        setSavedResults(JSON.parse(savedResultsData))
+      } catch (e) {
+        console.error('저장된 조도 결과를 불러오는 중 오류 발생:', e)
+      }
+    }
+  }, [])
+
   // 저장된 커스텀 조명 저장 함수
   const saveCustomLight = useCallback(() => {
     if (!customLightName || customLightLumen <= 0 || customLightWatt <= 0) return
@@ -257,6 +286,41 @@ function App() {
     setSavedCustomLights(updatedLights)
     localStorage.setItem('customLights', JSON.stringify(updatedLights))
   }, [savedCustomLights])
+
+  // 현재 조도 결과 저장 함수
+  const saveCurrentResult = useCallback(() => {
+    if (!area || !height || !desiredLux || selectedLights.length === 0) return
+
+    const newResult: SavedResult = {
+      id: Date.now().toString(),
+      area,
+      height,
+      desiredLux,
+      expectedLux,
+      totalLumen,
+      totalWatt,
+      lights: [...selectedLights]
+    }
+
+    const updatedResults = [newResult, ...savedResults]
+    setSavedResults(updatedResults)
+    localStorage.setItem('savedResults', JSON.stringify(updatedResults))
+  }, [area, height, desiredLux, expectedLux, totalLumen, totalWatt, selectedLights, savedResults])
+
+  // 저장된 결과 불러오기 함수
+  const loadResult = useCallback((result: SavedResult) => {
+    setArea(result.area)
+    setHeight(result.height)
+    setDesiredLux(result.desiredLux)
+    setSelectedLights([...result.lights])
+  }, [])
+
+  // 저장된 결과 삭제 함수
+  const deleteResult = useCallback((id: string) => {
+    const updatedResults = savedResults.filter(result => result.id !== id)
+    setSavedResults(updatedResults)
+    localStorage.setItem('savedResults', JSON.stringify(updatedResults))
+  }, [savedResults])
 
   const addCustomLight = useCallback((e: React.MouseEvent)=>{
     e.preventDefault()
@@ -877,6 +941,18 @@ function App() {
             <span>총 {totalLumen.toLocaleString()} lm</span>
             <span>총 {totalWatt.toLocaleString()} W</span>
           </div>
+
+          {/* 조도 결과 저장 버튼 */}
+          <div className="flex justify-center">
+            <button
+              type="button"
+              onClick={saveCurrentResult}
+              disabled={!area || !height || !desiredLux || selectedLights.length === 0}
+              className="px-4 py-2 rounded-lg bg-green-600 text-white disabled:bg-gray-400 transition hover:bg-green-700"
+            >
+              조도 결과 저장
+            </button>
+          </div>
         </section>
 
         {/* ▣ 선택된 조명 목록 ▣ */}
@@ -949,6 +1025,78 @@ function App() {
                 </p>
               </>}
         </section>
+
+        {/* ▣ 저장된 조도 결과 ▣ */}
+        {savedResults.length > 0 && (
+          <section className="bg-white p-6 rounded-xl shadow border space-y-4">
+            <h2 className="text-xl font-semibold text-center">저장된 조도 결과</h2>
+            
+            <div className="flex justify-center mb-4">
+              <button
+                type="button"
+                onClick={() => setShowSavedResults(!showSavedResults)}
+                className="px-4 py-2 rounded-lg bg-green-600 text-white transition hover:bg-green-700"
+              >
+                저장된 결과 {showSavedResults ? '닫기' : '목록 보기'} ({savedResults.length})
+              </button>
+            </div>
+            
+            {showSavedResults && (
+              <div className="space-y-4">
+                {savedResults.map(result => (
+                  <div key={result.id} className="border rounded-lg p-4 space-y-3">
+                    {/* 기본 정보 */}
+                    <div className="flex justify-between text-sm">
+                      <span>면적: {result.area} m²</span>
+                      <span>높이: {result.height} mm</span>
+                      <span>목표: {result.desiredLux} lx</span>
+                    </div>
+                    
+                    {/* 결과 정보 */}
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <p className="text-center font-medium">
+                        예상 조도: <span className="text-lg font-bold">{result.expectedLux} lx</span>
+                      </p>
+                      <div className="flex justify-center gap-6 text-sm mt-1">
+                        <span>총 {result.totalLumen.toLocaleString()} lm</span>
+                        <span>총 {result.totalWatt.toLocaleString()} W</span>
+                      </div>
+                    </div>
+                    
+                    {/* 조명 목록 요약 */}
+                    <div className="max-h-40 overflow-y-auto border-t pt-2">
+                      <p className="text-sm font-medium mb-1">선택된 조명</p>
+                      {result.lights.map(light => (
+                        <div key={light.id} className="text-xs flex justify-between py-1 border-b">
+                          <span className="truncate max-w-[60%]">{light.name} ({light.colorTemp})</span>
+                          <span>{light.quantity}개</span>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* 버튼 */}
+                    <div className="flex justify-end gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => loadResult(result)}
+                        className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700"
+                      >
+                        불러오기
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => deleteResult(result.id)}
+                        className="px-3 py-1.5 rounded-lg border border-red-300 text-red-600 text-sm hover:bg-red-50"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
         <p className="text-center text-[0.65rem] text-gray-500">
           E = Σ lm × UF × MF ÷ 면적&nbsp;|&nbsp;UF 자동 보정, MF = 0.8
