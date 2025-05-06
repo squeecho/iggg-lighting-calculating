@@ -28,6 +28,7 @@ interface SavedCustomLight {
 // 조도 결과 저장을 위한 인터페이스
 interface SavedResult {
   id: string
+  name: string  // 저장 결과 이름
   area: string
   height: string
   desiredLux: number
@@ -74,6 +75,9 @@ function App() {
   const [selectedCategory,setSelectedCategory] = useState('다운라이트')
   const [selectedLightColorTemps,setSelectedLightColorTemps] = useState<Record<string,string>>({})
   const [tempQuantities,setTempQuantities] = useState<Record<string,number|string>>({})
+  
+  // 저장 결과 이름 상태
+  const [resultName, setResultName] = useState<string>('')
   
   // T20 마그네틱 타입 선택 상태
   const [selectedT20Type, setSelectedT20Type] = useState<string>('')
@@ -293,6 +297,7 @@ function App() {
 
     const newResult: SavedResult = {
       id: Date.now().toString(),
+      name: resultName || `조도 결과 ${new Date().toLocaleDateString()}`,
       area,
       height,
       desiredLux,
@@ -305,7 +310,8 @@ function App() {
     const updatedResults = [newResult, ...savedResults]
     setSavedResults(updatedResults)
     localStorage.setItem('savedResults', JSON.stringify(updatedResults))
-  }, [area, height, desiredLux, expectedLux, totalLumen, totalWatt, selectedLights, savedResults])
+    setResultName('') // 저장 후 이름 필드 초기화
+  }, [area, height, desiredLux, expectedLux, totalLumen, totalWatt, selectedLights, savedResults, resultName])
 
   // 저장된 결과 불러오기 함수
   const loadResult = useCallback((result: SavedResult) => {
@@ -942,13 +948,22 @@ function App() {
             <span>총 {totalWatt.toLocaleString()} W</span>
           </div>
 
-          {/* 조도 결과 저장 버튼 */}
-          <div className="flex justify-center">
+          {/* 조도 결과 저장 */}
+          <div className="flex justify-center gap-2">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="저장할 이름 (선택사항)"
+                value={resultName}
+                onChange={e => setResultName(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg"
+              />
+            </div>
             <button
               type="button"
               onClick={saveCurrentResult}
               disabled={!area || !height || !desiredLux || selectedLights.length === 0}
-              className="px-4 py-2 rounded-lg bg-green-600 text-white disabled:bg-gray-400 transition hover:bg-green-700"
+              className="px-4 py-2 rounded-lg bg-green-600 text-white disabled:bg-gray-400 transition hover:bg-green-700 whitespace-nowrap"
             >
               조도 결과 저장
             </button>
@@ -1046,10 +1061,13 @@ function App() {
                 {savedResults.map(result => (
                   <div key={result.id} className="border rounded-lg p-4 space-y-3">
                     {/* 기본 정보 */}
-                    <div className="flex justify-between text-sm">
-                      <span>면적: {result.area} m²</span>
-                      <span>높이: {result.height} mm</span>
-                      <span>목표: {result.desiredLux} lx</span>
+                    <div className="flex flex-col space-y-2">
+                      <p className="text-center font-semibold bg-amber-50 border border-amber-200 rounded-lg py-2 px-4 mx-auto mb-2">{result.name}</p>
+                      <div className="flex justify-between text-sm">
+                        <span>면적: {result.area} m²</span>
+                        <span>높이: {result.height} mm</span>
+                        <span>목표: {result.desiredLux} lx</span>
+                      </div>
                     </div>
                     
                     {/* 결과 정보 */}
